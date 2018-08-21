@@ -1,3 +1,6 @@
+const MOST_RECENT = -1;
+const DEFAULT_LIMIT = 100;
+
 module.exports = [
   {
     "api": "witness_api",
@@ -46,7 +49,13 @@ module.exports = [
   {
     "api": "account_history",
     "method": "get_account_history",
-    "params": ["account", "from", "limit"]
+    "has_default_values": true,
+    "params": [
+      "account",
+      `from=${MOST_RECENT}`,
+      `limit=${DEFAULT_LIMIT}`,
+      "query={}"
+    ]
   },
   {
     "api": "operation_history",

@@ -303,10 +303,19 @@ class Golos extends EventEmitter {
 methods.forEach((method) => {
   const methodName = method.method_name || camelCase(method.method);
   const methodParams = method.params || [];
+  const defaultParms = {};
+  const hasDefaultValues = method.has_default_values;
+
+  if (hasDefaultValues) {
+    methodParams.forEach( param => {
+      const [p, value] = param.split('=');
+      defaultParms[p] = value ? JSON.parse(value) : '';
+    })
+  }
 
   Golos.prototype[`${methodName}With`] =
     function Golos$$specializedSendWith(options, callback) {
-      const params = methodParams.map((param) => options[param]);
+      const params = methodParams.map((param) => options[param.split('=')[0]]);
       return this.send(method.api, {
         method: method.method,
         params,
@@ -315,11 +324,16 @@ methods.forEach((method) => {
 
   Golos.prototype[methodName] =
     function Golos$specializedSend(...args) {
-      const options = methodParams.reduce((memo, param, i) => {
-        memo[param] = args[i]; // eslint-disable-line no-param-reassign
-        return memo;
-      }, {});
-      const callback = args[methodParams.length];
+      let options =  {};
+      const argsWithoutCb = args.slice(0, args.length - 1);
+      methodParams.forEach((param, i) => {
+        const [p, value] = param.split('=');
+        if (argsWithoutCb[i]) {
+          options[p] = argsWithoutCb[i];
+        }
+      })
+      options = Object.assign(defaultParms, options);
+      const callback = args[args.length - 1];
 
       return this[`${methodName}With`](options, callback);
     };
