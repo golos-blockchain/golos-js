@@ -26,6 +26,10 @@ const DEFAULTS = {
   id: 0,
 };
 
+const cbMethods = [
+  'set_block_applied_callback'
+];
+
 const expectedResponseMs = process.env.EXPECTED_RESPONSE_MS || 2000;
 
 class Golos extends EventEmitter {
@@ -39,6 +43,7 @@ class Golos extends EventEmitter {
     this.isOpen = false;
     this.releases = [];
     this.requests = {};
+    this.callbacks = {};
   }
 
   setWebSocket(url) {
@@ -80,7 +85,7 @@ class Golos extends EventEmitter {
         debugWs('Received message', message.data);
         const data = JSON.parse(message.data);
         const id = data.id;
-        const request = this.requests[id];
+        const request = this.requests[id] || this.callbacks[id];
         if (!request) {
           debugWs('Golos.onMessage error: unknown request ', id);
           return;
@@ -138,9 +143,12 @@ class Golos extends EventEmitter {
     }
 
     debugProtocol('Resolved', api, data, '->', message);
-    this.emit('track-performance', data.method, Date.now() - start_time);
-    delete this.requests[message.id];
-    resolve(message.result);
+    if (cbMethods.includes(data.method)) {
+      this.callbacks[message.id].cb(null, message.result);
+    } else {
+      delete this.requests[message.id];
+      resolve(message.result);
+    }
   }
 
   send(api, data, callback) {
@@ -167,13 +175,21 @@ class Golos extends EventEmitter {
         });
 
         debugWs('Sending message', payload);
-        this.requests[id] = {
-          api,
-          data,
-          resolve,
-          reject,
-          start_time: Date.now()
-        };
+        if (cbMethods.includes(data.method)) {
+          this.callbacks[id] = {
+            api,
+            data,
+            cb: callback
+          };
+        } else {
+          this.requests[id] = {
+            api,
+            data,
+            resolve,
+            reject,
+            start_time: Date.now()
+          };
+        }
 
         this.ws.send(payload);
       }))
@@ -338,6 +354,18 @@ methods.forEach((method) => {
       return this[`${methodName}With`](options, callback);
     };
 });
+
+Golos.prototype['setBlockAppliedCallback'] =
+function Golos$setCallback(type, callback) {
+ return this.send(
+   'database_api',
+   {
+     method: 'set_block_applied_callback',
+     params: [type],
+   },
+   callback
+ );
+}
 
 Promise.promisifyAll(Golos.prototype);
 
