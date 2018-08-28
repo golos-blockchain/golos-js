@@ -27,7 +27,8 @@ const DEFAULTS = {
 };
 
 const cbMethods = [
-  'set_block_applied_callback'
+  'set_block_applied_callback',
+  'set_pending_transaction_callback'
 ];
 
 const expectedResponseMs = process.env.EXPECTED_RESPONSE_MS || 2000;
@@ -366,6 +367,18 @@ function Golos$setCallback(type, callback) {
    callback
  );
 }
+
+Golos.prototype['setPendingTransactionCallback'] =
+  function Golos$setCallback(callback) {
+  return this.send(
+    'database_api',
+    {
+      method: 'set_pending_transaction_callback',
+      params: [],
+    },
+    callback
+  );
+ }
 
 Promise.promisifyAll(Golos.prototype);
 
