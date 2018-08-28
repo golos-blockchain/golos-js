@@ -356,31 +356,31 @@ methods.forEach((method) => {
     };
 });
 
+Promise.promisifyAll(Golos.prototype);
+
 Golos.prototype['setBlockAppliedCallback'] =
-function Golos$setCallback(type, callback) {
- return this.send(
-   'database_api',
-   {
-     method: 'set_block_applied_callback',
-     params: [type],
-   },
-   callback
- );
-}
+  function Golos$setCallback(type, callback) {
+    return this.send(
+      'database_api',
+      {
+        method: 'set_block_applied_callback',
+        params: [type],
+      },
+      callback
+    );
+};
 
 Golos.prototype['setPendingTransactionCallback'] =
   function Golos$setCallback(callback) {
-  return this.send(
-    'database_api',
-    {
-      method: 'set_pending_transaction_callback',
-      params: [],
-    },
-    callback
-  );
- }
-
-Promise.promisifyAll(Golos.prototype);
+    return this.send(
+      'database_api',
+      {
+        method: 'set_pending_transaction_callback',
+        params: [],
+      },
+      callback
+    );
+ };
 
 // Export singleton instance
 const golos = new Golos();
