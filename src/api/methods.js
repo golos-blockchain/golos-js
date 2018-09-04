@@ -429,4 +429,39 @@ module.exports = [
     "method": "get_open_orders",
     "params": ["owner"]
   },
+  {
+    "api": "private_message",
+    "method": "get_inbox",
+    "params": ["to", "query"]
+  },
+  {
+    "api": "private_message",
+    "method": "get_outbox",
+    "params": ["from", "query"]
+  },
+  {
+    "api": "private_message",
+    "method": "get_thread",
+    "params": ["from", "to", "query"]
+  },
+  {
+    "api": "private_message",
+    "method": "get_settings",
+    "params": ["owner"]
+  },
+  {
+    "api": "private_message",
+    "method": "get_contacts_size",
+    "params": ["owner"]
+  },
+  {
+    "api": "private_message",
+    "method": "get_contact_info",
+    "params": ["owner", "contact"]
+  },
+  {
+    "api": "private_message",
+    "method": "get_contacts",
+    "params": ["owner", "type", "limit", "offset"]
+  },
 ]

@@ -28,7 +28,8 @@ const DEFAULTS = {
 
 const cbMethods = [
   'set_block_applied_callback',
-  'set_pending_transaction_callback'
+  'set_pending_transaction_callback',
+  'set_callback'
 ];
 
 const expectedResponseMs = process.env.EXPECTED_RESPONSE_MS || 2000;
@@ -381,6 +382,18 @@ Golos.prototype['setPendingTransactionCallback'] =
       callback
     );
  };
+
+ Golos.prototype['setPrivateMessageCallback'] =
+ function Golos$setCallback(query, callback) {
+   return this.send(
+     'private_message',
+     {
+       method: 'set_callback',
+       params: [query],
+     },
+     callback
+   );
+};
 
 // Export singleton instance
 const golos = new Golos();
