@@ -333,7 +333,7 @@ methods.forEach((method) => {
 
   Golos.prototype[`${methodName}With`] =
     function Golos$$specializedSendWith(options, callback) {
-      const params = methodParams.map((param) => options[param.split('=')[0]]);
+      const params = methodParams.map((param) => options[hasDefaultValues ? param.split('=')[0] : param]);
       return this.send(method.api, {
         method: method.method,
         params,
@@ -343,15 +343,23 @@ methods.forEach((method) => {
   Golos.prototype[methodName] =
     function Golos$specializedSend(...args) {
       let options =  {};
-      const argsWithoutCb = args.slice(0, args.length - 1);
-      methodParams.forEach((param, i) => {
-        const [p, value] = param.split('=');
-        if (argsWithoutCb[i]) {
-          options[p] = argsWithoutCb[i];
-        }
-      })
-      options = Object.assign(defaultParms, options);
-      const callback = args[args.length - 1];
+      if (hasDefaultValues) {
+        const argsWithoutCb = args.slice(0, args.length - 1);
+        methodParams.forEach((param, i) => {
+          const [p, value] = param.split('=');
+          if (argsWithoutCb[i]) {
+            options[p] = argsWithoutCb[i];
+          }
+        })
+        options = Object.assign({}, defaultParms, options);
+      } else {
+        const opt = methodParams.reduce((memo, param, i) => {
+          memo[param] = args[i];
+          return memo;
+        }, {});
+        options = Object.assign({}, opt);
+      }
+      const callback = args[hasDefaultValues ? args.length - 1: methodParams.length];
 
       return this[`${methodName}With`](options, callback);
     };
