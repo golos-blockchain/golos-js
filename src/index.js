@@ -5,6 +5,7 @@ const formatter = require('./formatter')(api);
 const memo = require('./auth/memo');
 const config = require('./config');
 const utils = require('./utils');
+const ecc = require('./auth/ecc/');
 
 module.exports = {
   api,
@@ -14,4 +15,5 @@ module.exports = {
   memo,
   config,
   utils,
+  ecc
 };
