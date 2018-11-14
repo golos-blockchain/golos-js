@@ -549,5 +549,33 @@ module.exports = [
       "props"
     ]
   },
+  {
+    "roles": ["active"],
+    "operation": "break_free_referral",
+    "params": [
+      "referral",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "delegate_vesting_shares_with_interest",
+    "params": [
+      "delegator",
+      "delegatee",
+      "vesting_shares",
+      "interest_rate",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "reject_vesting_shares_delegation",
+    "params": [
+      "delegator",
+      "delegatee",
+      "extensions"
+    ]
+  },
 ]
 

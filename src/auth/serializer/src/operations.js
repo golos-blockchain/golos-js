@@ -84,6 +84,27 @@ const comment_payout_beneficiaries = new Serializer(
     }
 );
 
+const comment_auction_window_reward_destination = new Serializer(
+    1, {
+        destination: string
+    }
+);
+
+const comment_curation_rewards_percent = new Serializer(
+    2, {
+        percent: uint16
+    }
+);
+
+const account_referral = new Serializer(
+    0, {
+        referrer: string,
+        interest_rate: uint16,
+        end_date: time_point_sec,
+        break_fee: asset
+    }
+);
+
 const transaction = new Serializer( 
     "transaction", {
         ref_block_num: uint16,
@@ -383,7 +404,9 @@ let comment_options = new Serializer(
         allow_votes: bool,
         allow_curation_rewards: bool,
         extensions: set(static_variant([
-            comment_payout_beneficiaries
+            comment_payout_beneficiaries,
+            comment_auction_window_reward_destination,
+            comment_curation_rewards_percent,
         ]))
     }
 );
@@ -610,7 +633,9 @@ let account_create_with_delegation = new Serializer(
         posting: authority,
         memo_key: public_key,
         json_metadata: string,
-        extensions: set(future_extensions)
+        extensions: set(static_variant([
+            account_referral
+        ]))
   }
 );
 
@@ -676,14 +701,64 @@ let chain_properties_18 = new Serializer(
   }
 );
 
+chain_properties_19 = new Serializer(
+    2, {
+        account_creation_fee: asset,
+        maximum_block_size: uint32,
+        sbd_interest_rate: uint16,
+        create_account_min_golos_fee: asset,
+        create_account_min_delegation: asset,
+        create_account_delegation_time: uint32,
+        min_delegation: asset,
+        max_referral_interest_rate: uint16,
+        max_referral_term_sec: uint32,
+        max_referral_break_fee: asset,
+        comments_window: uint16,
+        comments_per_window: uint16,
+        votes_window: uint16,
+        votes_per_window: uint16,
+        auction_window_size: uint32,
+        max_delegated_vesting_interest_rate: uint16,
+        custom_ops_bandwidth_multiplier: uint16,
+        min_curation_percent: uint16,
+        max_curation_percent: uint16
+  }
+);
+
 let chain_properties_update = new Serializer(
     "chain_properties_update", {
         owner: string,
         props: static_variant([
             chain_properties,
-            chain_properties_18
+            chain_properties_18,
+            chain_properties_19,
         ])
   }
+);
+
+let break_free_referral = new Serializer(
+    "break_free_referral", {
+        referral: string,
+        extensions: set(future_extensions)
+    }
+);
+  
+let delegate_vesting_shares_with_interest = new Serializer(
+    "delegate_vesting_shares_with_interest", {
+        delegator: string,
+        delegatee: string,
+        vesting_shares: asset,
+        interest_rate: uint16,
+        extensions: set(future_extensions)
+    }
+);
+  
+let reject_vesting_shares_delegation = new Serializer(
+    "reject_vesting_shares_delegation", {
+        delegator: string,
+        delegatee: string,
+        extensions: set(future_extensions)
+    }
 );
 
 let fill_convert_request = new Serializer(
@@ -848,6 +923,9 @@ operation.st_operations = [
     proposal_update,
     proposal_delete,
     chain_properties_update,
+    break_free_referral,
+    delegate_vesting_shares_with_interest,
+    reject_vesting_shares_delegation,
     fill_convert_request,
     author_reward,
     curation_reward,
@@ -861,7 +939,7 @@ operation.st_operations = [
     hardfork,
     comment_payout_update,
     comment_benefactor_reward,
-    return_vesting_delegation
+    return_vesting_delegation,
 ];
 
 //# -------------------------------
