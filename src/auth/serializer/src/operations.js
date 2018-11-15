@@ -701,7 +701,7 @@ let chain_properties_18 = new Serializer(
   }
 );
 
-chain_properties_19 = new Serializer(
+let chain_properties_19 = new Serializer(
     2, {
         account_creation_fee: asset,
         maximum_block_size: uint32,
