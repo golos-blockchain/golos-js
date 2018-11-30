@@ -86,7 +86,7 @@ const comment_payout_beneficiaries = new Serializer(
 
 const comment_auction_window_reward_destination = new Serializer(
     1, {
-        destination: string
+        destination: uint64
     }
 );
 
