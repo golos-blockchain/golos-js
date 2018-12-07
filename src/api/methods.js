@@ -1,5 +1,7 @@
 const MOST_RECENT = -1;
-const DEFAULT_LIMIT = 100;
+const ACCOUNT_HISTORY_DEFAULT_LIMIT = 100;
+const DEFAULT_VOTES_LIMIT = 10000;
+const DEFAULT_VOTES_OFFSET = 0;
 
 module.exports = [
   {
@@ -53,7 +55,7 @@ module.exports = [
     "params": [
       "account",
       `from=${MOST_RECENT}`,
-      `limit=${DEFAULT_LIMIT}`,
+      `limit=${ACCOUNT_HISTORY_DEFAULT_LIMIT}`,
       "query={}"
     ]
   },
@@ -149,27 +151,58 @@ module.exports = [
   {
     "api": "social_network",
     "method": "get_replies_by_last_update",
-    "params": ["startAuthor", "startPermlink", "limit", "voteLimit"]
+    "has_default_values": true,
+    "params": [
+      "startAuthor",
+      "startPermlink",
+      "limit",
+      `voteLimit=${DEFAULT_VOTES_LIMIT}`,
+      `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+    ]
   },
   {
     "api": "social_network",
     "method": "get_content",
-    "params": ["author", "permlink", "voteLimit"]
+    "has_default_values": true,
+    "params": [
+      "author",
+      "permlink",
+      `voteLimit=${DEFAULT_VOTES_LIMIT}`,
+      `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+    ]
   },
   {
     "api": "social_network",
     "method": "get_content_replies",
-    "params": ["parent", "parentPermlink", "voteLimit"]
+    "has_default_values": true,
+    "params": [
+      "parent",
+      "parentPermlink",
+      `voteLimit=${DEFAULT_VOTES_LIMIT}`,
+      `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+    ]
   },
   {
     "api": "social_network",
     "method": "get_all_content_replies",
-    "params": ["parent", "parentPermlink", "voteLimit"]
+    "has_default_values": true,
+    "params": [
+      "parent",
+      "parentPermlink",
+      `voteLimit=${DEFAULT_VOTES_LIMIT}`,
+      `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+    ]
   },
   {
     "api": "social_network",
     "method": "get_active_votes",
-    "params": ["author", "permlink", "voteLimit"]
+    "has_default_values": true,
+    "params": [
+      "author",
+      "permlink",
+      `voteLimit=${DEFAULT_VOTES_LIMIT}`,
+      `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+    ]
   },
   {
     "api": "social_network",
