@@ -85,5 +85,15 @@ export const methods_0_18_0 = [
     "get_recent_trades",
     "get_ticker",
     "get_trade_history",
-    "get_volume"
+    "get_volume",
+    "get_inbox",
+    "get_outbox",
+    "get_thread",
+    "get_settings",
+    "get_contacts_size",
+    "get_contact_info",
+    "get_contacts",
+    "setBlockAppliedCallback",
+    "setPendingTransactionCallback",
+    "setPrivateMessageCallback",
 ]
