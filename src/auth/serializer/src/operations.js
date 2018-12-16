@@ -712,16 +712,22 @@ let chain_properties_19 = new Serializer(
         min_delegation: asset,
         max_referral_interest_rate: uint16,
         max_referral_term_sec: uint32,
+        min_referral_break_fee: asset,
         max_referral_break_fee: asset,
+        posts_window: uint16,
+        posts_per_window: uint16,
         comments_window: uint16,
         comments_per_window: uint16,
         votes_window: uint16,
         votes_per_window: uint16,
-        auction_window_size: uint32,
+        auction_window_size: uint16,
         max_delegated_vesting_interest_rate: uint16,
         custom_ops_bandwidth_multiplier: uint16,
         min_curation_percent: uint16,
-        max_curation_percent: uint16
+        max_curation_percent: uint16,
+        curation_reward_curve: uint64,
+        allow_distribute_auction_reward: bool,
+        allow_return_auction_reward_to_fund: bool
   }
 );
 
