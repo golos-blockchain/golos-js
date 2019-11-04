@@ -96,4 +96,6 @@ export const methods_0_18_0 = [
     "setBlockAppliedCallback",
     "setPendingTransactionCallback",
     "setPrivateMessageCallback",
+    "get_worker_requests",
+    "get_worker_request_votes",
 ]

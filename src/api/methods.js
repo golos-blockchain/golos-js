@@ -497,4 +497,14 @@ module.exports = [
     "method": "get_contacts",
     "params": ["owner", "type", "limit", "offset"]
   },
+  {
+    "api": "worker_api",
+    "method": "get_worker_requests",
+    "params": ["query", "sort", "fill_posts"]
+  },
+  {
+    "api": "worker_api",
+    "method": "get_worker_request_votes",
+    "params": ["author", "permlink", "start_voter", "limit"]
+  },
 ]
