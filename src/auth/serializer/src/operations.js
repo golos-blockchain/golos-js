@@ -767,6 +767,37 @@ let reject_vesting_shares_delegation = new Serializer(
     }
 );
 
+let worker_request = new Serializer(
+    "worker_request", {
+        author: string,
+        permlink: string,
+        worker: string,
+        required_amount_min: asset,
+        required_amount_max: asset,
+        vest_reward: bool,
+        duration: uint32,
+        extensions: set(future_extensions)
+    }
+);
+
+let worker_request_delete = new Serializer(
+    "worker_request_delete", {
+        author: string,
+        permlink: string,
+        extensions: set(future_extensions)
+    }
+);
+
+let worker_request_vote = new Serializer(
+    "worker_request_vote", {
+        voter: string,
+        author: string,
+        permlink: string,
+        vote_percent: int16,
+        extensions: set(future_extensions)
+    }
+);
+
 let fill_convert_request = new Serializer(
     "fill_convert_request", {
         owner: string,
@@ -932,6 +963,9 @@ operation.st_operations = [
     break_free_referral,
     delegate_vesting_shares_with_interest,
     reject_vesting_shares_delegation,
+    worker_request,
+    worker_request_delete,
+    worker_request_vote,
     fill_convert_request,
     author_reward,
     curation_reward,
