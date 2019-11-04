@@ -9,7 +9,7 @@ $ npm install golos-js --save
 ```
 
 Here is full documentation:
-https://github.com/GolosChain/golos-js/tree/master/doc
+https://github.com/golos-classic/golos-js/tree/master/doc
 
 ## Browser 
 ```html 
@@ -24,7 +24,11 @@ golos.api.getAccounts(['ned', 'dan'], function(err, response){
 ## Server
 
 ## WebSockets
-wss://ws.golos.io By Default<br/>
+wss://api.golos.blckchnd.com/ws<br/>
+wss://golos.lexa.host/ws<br/>
+wss://golos.solox.world/ws<br/>
+wss://denisgolub.name/ws<br/>
+wss://shafarevich.space/ws<br/>
 
 ## Examples
 ### Broadcast Vote
