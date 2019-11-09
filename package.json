@@ -1,7 +1,7 @@
 {
-  "name": "golos-js",
+  "name": "golos-classic-js",
   "version": "0.7.9",
-  "description": "Golos.js the JavaScript API for Golos blockchain",
+  "description": "Golos-Classic.js the JavaScript API for Golos blockchain",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha -t 20000 --require babel-polyfill --require babel-register",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GolosChain/golos-js.git"
+    "url": "git+https://github.com/golos-classic/golos-js.git"
   },
   "keywords": [
     "golos",
@@ -30,9 +30,9 @@
   "author": "Fabien (https://github.com/bonustrack)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/GolosChain/golos-js/issues"
+    "url": "https://github.com/golos-classic/golos-js/issues"
   },
-  "homepage": "https://github.com/GolosChain/golos-js#readme",
+  "homepage": "https://github.com/golos-classic/golos-js#readme",
   "dependencies": {
     "bigi": "^1.4.2",
     "bluebird": "^3.4.6",
