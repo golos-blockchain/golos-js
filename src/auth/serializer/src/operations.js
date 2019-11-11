@@ -767,6 +767,13 @@ let reject_vesting_shares_delegation = new Serializer(
     }
 );
 
+let transit_to_cyberway = new Serializer(
+    "transit_to_cyberway", {
+        owner: string,
+        vote_to_transit: bool
+    }
+);
+
 let worker_request = new Serializer(
     "worker_request", {
         author: string,
@@ -963,6 +970,7 @@ operation.st_operations = [
     break_free_referral,
     delegate_vesting_shares_with_interest,
     reject_vesting_shares_delegation,
+    transit_to_cyberway,
     worker_request,
     worker_request_delete,
     worker_request_vote,
