@@ -1,15 +1,15 @@
 # Golos.js
 Golos.js the JavaScript API for Golos blockchain
 
-[![npm version](https://badge.fury.io/js/golos-js.svg)](https://badge.fury.io/js/golos-js)
+[![npm version](https://badge.fury.io/js/golos-classic-js.svg)](https://badge.fury.io/js/golos-classic-js)
 
 # Install
 ```
-$ npm install golos-js --save
+$ npm install golos-classic-js --save
 ```
 
 Here is full documentation:
-https://github.com/golos-classic/golos-js/tree/master/doc
+https://github.com/golos-blockchain/golos-js/tree/master/doc
 
 ## Browser 
 ```html 
@@ -27,8 +27,6 @@ golos.api.getAccounts(['ned', 'dan'], function(err, response){
 wss://api.golos.blckchnd.com/ws<br/>
 wss://golos.lexa.host/ws<br/>
 wss://golos.solox.world/ws<br/>
-wss://denisgolub.name/ws<br/>
-wss://shafarevich.space/ws<br/>
 
 ## Examples
 ### Broadcast Vote
