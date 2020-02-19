@@ -731,6 +731,46 @@ let chain_properties_19 = new Serializer(
   }
 );
 
+let chain_properties_22 = new Serializer(
+    3, {
+        account_creation_fee: asset,
+        maximum_block_size: uint32,
+        sbd_interest_rate: uint16,
+        create_account_min_golos_fee: asset,
+        create_account_min_delegation: asset,
+        create_account_delegation_time: uint32,
+        min_delegation: asset,
+        max_referral_interest_rate: uint16,
+        max_referral_term_sec: uint32,
+        min_referral_break_fee: asset,
+        max_referral_break_fee: asset,
+        posts_window: uint16,
+        posts_per_window: uint16,
+        comments_window: uint16,
+        comments_per_window: uint16,
+        votes_window: uint16,
+        votes_per_window: uint16,
+        auction_window_size: uint16,
+        max_delegated_vesting_interest_rate: uint16,
+        custom_ops_bandwidth_multiplier: uint16,
+        min_curation_percent: uint16,
+        max_curation_percent: uint16,
+        curation_reward_curve: uint64,
+        allow_distribute_auction_reward: bool,
+        allow_return_auction_reward_to_fund: bool,
+        worker_reward_percent: uint16,
+        witness_reward_percent: uint16,
+        vesting_reward_percent: uint16,
+        worker_request_creation_fee: asset,
+        worker_request_approve_min_percent: uint16,
+        sbd_debt_convert_rate: uint16,
+        vote_regeneration_per_day: uint32,
+        witness_skipping_reset_time: uint32,
+        witness_idleness_time: uint32,
+        account_idleness_time: uint32
+  }
+);
+
 let chain_properties_update = new Serializer(
     "chain_properties_update", {
         owner: string,
@@ -738,6 +778,7 @@ let chain_properties_update = new Serializer(
             chain_properties,
             chain_properties_18,
             chain_properties_19,
+            chain_properties_22,
         ])
   }
 );
@@ -763,6 +804,44 @@ let reject_vesting_shares_delegation = new Serializer(
     "reject_vesting_shares_delegation", {
         delegator: string,
         delegatee: string,
+        extensions: set(future_extensions)
+    }
+);
+
+let transit_to_cyberway = new Serializer(
+    "transit_to_cyberway", {
+        owner: string,
+        vote_to_transit: bool
+    }
+);
+
+let worker_request = new Serializer(
+    "worker_request", {
+        author: string,
+        permlink: string,
+        worker: string,
+        required_amount_min: asset,
+        required_amount_max: asset,
+        vest_reward: bool,
+        duration: uint32,
+        extensions: set(future_extensions)
+    }
+);
+
+let worker_request_delete = new Serializer(
+    "worker_request_delete", {
+        author: string,
+        permlink: string,
+        extensions: set(future_extensions)
+    }
+);
+
+let worker_request_vote = new Serializer(
+    "worker_request_vote", {
+        voter: string,
+        author: string,
+        permlink: string,
+        vote_percent: int16,
         extensions: set(future_extensions)
     }
 );
@@ -932,6 +1011,10 @@ operation.st_operations = [
     break_free_referral,
     delegate_vesting_shares_with_interest,
     reject_vesting_shares_delegation,
+    transit_to_cyberway,
+    worker_request,
+    worker_request_delete,
+    worker_request_vote,
     fill_convert_request,
     author_reward,
     curation_reward,

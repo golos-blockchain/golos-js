@@ -577,5 +577,39 @@ module.exports = [
       "extensions"
     ]
   },
+  {
+    "roles": ["posting"],
+    "operation": "worker_request",
+    "params": [
+      "author",
+      "permlink",
+      "worker",
+      "required_amount_min",
+      "required_amount_max",
+      "vest_reward",
+      "duration",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["posting"],
+    "operation": "worker_request_delete",
+    "params": [
+      "author",
+      "permlink",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["posting"],
+    "operation": "worker_request_vote",
+    "params": [
+      "voter",
+      "author",
+      "permlink",
+      "vote_percent",
+      "extensions"
+    ]
+  },
 ]
 

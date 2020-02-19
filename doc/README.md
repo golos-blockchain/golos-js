@@ -17,6 +17,7 @@
     - [Witnesses](#witnesses)
 - [Login API](#login)
 - [Follow API](#follow-api)
+- [Worker API](#worker-api)
 - [Broadcast API](#broadcast-api)
 - [Broadcast](#broadcast)
 - [Auth](#auth)
@@ -24,7 +25,13 @@
 
 # Install
 ```
-$ npm install git+https://github.com/GolosChain/golos-js --save
+$ npm install golos-classic-js --save
+```
+
+or
+
+```
+$ npm install git+https://github.com/golos-blockchain/golos-js.git --save
 ```
 
 # Browser 
@@ -41,7 +48,7 @@ golos.api.getAccounts(['ned', 'dan'], function(err, response){
 Default config should work with golos. however you can change it to work with golos
 as 
 ```js
-golos.config.set('websocket','wss://ws.golos.io'); // assuming websocket is work at ws.golos.io
+golos.config.set('websocket','wss://api-full.golos.id/ws');
 golos.config.set('address_prefix','GLS');
 golos.config.set('chain_id','782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12');
 ```
@@ -714,6 +721,23 @@ golos.api.getFollowCount(account, function(err, result) {
     console.log('getFollowCount', result);
   }
   else console.error(err);
+});
+```
+## Worker API
+
+### Get Worker Requests
+```
+// query: limit, start_author, start_permlink, select_authors, select_states
+// sort: by_created, by_net_rshares, by_upvotes, by_downvotes
+// state: created, payment, payment_complete, closed_by_author, closed_by_expiration, closed_by_voters
+golos.api.getWorkerRequests(query, sort, fillPosts, function(err, result) {
+  console.log(err, result);
+});
+```
+### Get Worker Request Votes
+```
+golos.api.getWorkerRequestVotes(author, permlink, startVoter, limit, function(err, result) {
+  console.log(err, result);
 });
 ```
 

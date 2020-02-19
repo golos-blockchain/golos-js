@@ -54,7 +54,7 @@ export const methods_0_18_0 = [
     "get_open_orders",
     "get_owner_history",
     "get_potential_signatures",
-    "get_proposed_transaction",
+    "get_proposed_transactions",
     "get_recovery_request",
     "get_replies_by_last_update",
     "get_required_signatures",
@@ -96,4 +96,6 @@ export const methods_0_18_0 = [
     "setBlockAppliedCallback",
     "setPendingTransactionCallback",
     "setPrivateMessageCallback",
+    "get_worker_requests",
+    "get_worker_request_votes",
 ]
