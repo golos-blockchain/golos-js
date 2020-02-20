@@ -13,7 +13,7 @@ https://github.com/golos-blockchain/golos-js/tree/master/doc
 
 ## Browser 
 
-Online library minify js available in [Unpkg CDN](https://unpkg.com/golos-classic-js@latest/dist/golos.min.js).
+Online library minify js available in [jsDelivr CND](https://cdn.jsdelivr.net/npm/golos-classic-js@latest/dist/golos.min.js) and [Unpkg CDN](https://unpkg.com/golos-classic-js@latest/dist/golos.min.js).
 
 ```html 
 <script src="./golos.min.js"></script>
