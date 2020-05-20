@@ -722,6 +722,43 @@ Types.optional = function(st_operation){
     };
 };
 
+Types.variant_object = {
+    fromByteBuffer(b){
+        let res = {};
+        const count = b.readUint8();
+        if (!count) return res;
+        for (let i = 0; i < count; ++i) {
+            const key = string.fromByteBuffer(b);
+            const val_type = b.readUint8();
+            if (val_type == 5) {
+                res[key] = string.fromByteBuffer(b);
+            } else if (val_type == 2) {
+                res[key] = uint64.fromByteBuffer(b);
+            }
+        }
+    },
+    appendByteBuffer(b, object){
+        b.writeUint8(Object.entries(object).length);
+        for (let [key, value] of Object.entries(object)) {
+            Types.string.appendByteBuffer(b, key);
+            if (typeof value === 'string') {
+                b.writeUint8(5);
+                Types.string.appendByteBuffer(b, value);
+            } else if (typeof value === 'number') {
+                b.writeUint8(2);
+                Types.uint64.appendByteBuffer(b, value);
+            }
+        }
+        return;
+    },
+    fromObject(object){
+        return object;
+    },
+    toObject(object, debug = {}){
+        return object;
+    }
+};
+
 Types.static_variant = function(_st_operations){
     return {
         nosort: true,

@@ -210,6 +210,11 @@ module.exports = [
     "params": ["voter", "from", "voteLimit"]
   },
   {
+    "api": "social_network",
+    "method": "get_donates",
+    "params": ["target", "from", "to", "limit", "offset"]
+  },
+  {
     "api": "database_api",
     "method": "get_block_header",
     "params": ["blockNum"]
@@ -341,6 +346,11 @@ module.exports = [
     "api": "database_api",
     "method": "get_expiring_vesting_delegations",
     "params": ["account", "from", "limit"]
+  },
+  {
+    "api": "database_api",
+    "method": "get_invite",
+    "params": ["invite_key"]
   },
   {
     "api": "follow",

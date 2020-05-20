@@ -46,6 +46,7 @@ const {
     bool,
     array,
     static_variant,
+    variant_object,
     map,
     set,
     public_key,
@@ -638,6 +639,20 @@ let account_create_with_delegation = new Serializer(
         ]))
   }
 );
+  
+let account_create_with_invite = new Serializer(
+    "account_create_with_invite", {
+        invite_secret: string,
+        creator: string,
+        new_account_name: string,
+        owner: authority,
+        active: authority,
+        posting: authority,
+        memo_key: public_key,
+        json_metadata: string,
+        extensions: set(future_extensions)
+  }
+);
 
 let account_metadata = new Serializer(
     "account_metadata", {
@@ -846,6 +861,73 @@ let worker_request_vote = new Serializer(
     }
 );
 
+let claim = new Serializer(
+    "claim", {
+        from: string,
+        to: string,
+        amount: asset,
+        to_vesting: bool,
+        extensions: set(future_extensions)
+    }
+);
+
+let donate_memo = new Serializer(
+    "donate_memo", {
+        app: string,
+        version: uint16,
+        target: types.variant_object,
+        comment: optional(string)
+    }
+);
+
+let donate = new Serializer(
+    "donate", {
+        from: string,
+        to: string,
+        amount: asset,
+        memo: donate_memo,
+        extensions: set(future_extensions)
+    }
+);
+
+let transfer_to_tip = new Serializer(
+    "transfer_to_tip", {
+        from: string,
+        to: string,
+        amount: asset,
+        memo: string,
+        extensions: set(future_extensions)
+    }
+);
+
+let transfer_from_tip = new Serializer(
+    "transfer_from_tip", {
+        from: string,
+        to: string,
+        amount: asset,
+        memo: string,
+        extensions: set(future_extensions)
+    }
+);
+
+let invite = new Serializer(
+    "invite", {
+        creator: string,
+        balance: asset,
+        invite_key: public_key,
+        extensions: set(future_extensions)
+    }
+);
+
+let invite_claim = new Serializer(
+    "invite_claim", {
+        initiator: string,
+        receiver: string,
+        invite_secret: string,
+        extensions: set(future_extensions)
+    }
+);
+
 let fill_convert_request = new Serializer(
     "fill_convert_request", {
         owner: string,
@@ -1015,6 +1097,13 @@ operation.st_operations = [
     worker_request,
     worker_request_delete,
     worker_request_vote,
+    claim,
+    donate,
+    transfer_to_tip,
+    transfer_from_tip,
+    invite,
+    invite_claim,
+    account_create_with_invite,
     fill_convert_request,
     author_reward,
     curation_reward,

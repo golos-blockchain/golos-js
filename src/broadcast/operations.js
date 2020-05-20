@@ -494,6 +494,21 @@ module.exports = [
     ]
   },
   {
+    "roles": ["active", "owner"],
+    "operation": "account_create_with_invite",
+    "params": [
+      "invite_secret",
+      "creator",
+      "new_account_name",
+      "owner",
+      "active",
+      "posting",
+      "memo_key",
+      "json_metadata",
+      "extensions"
+    ]
+  },
+  {
     "roles": ["posting"],
     "operation": "account_metadata",
     "params": [
@@ -608,6 +623,70 @@ module.exports = [
       "author",
       "permlink",
       "vote_percent",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["posting"],
+    "operation": "claim",
+    "params": [
+      "from",
+      "to",
+      "amount",
+      "to_vesting",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["posting"],
+    "operation": "donate",
+    "params": [
+      "from",
+      "to",
+      "amount",
+      "memo",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "transfer_to_tip",
+    "params": [
+      "from",
+      "to",
+      "amount",
+      "memo",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "transfer_from_tip",
+    "params": [
+      "from",
+      "to",
+      "amount",
+      "memo",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "invite",
+    "params": [
+      "creator",
+      "balance",
+      "invite_key",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "invite_claim",
+    "params": [
+      "initiator",
+      "receiver",
+      "invite_secret",
       "extensions"
     ]
   },
