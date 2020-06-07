@@ -116,6 +116,11 @@ module.exports = [
   },
   {
     "api": "tags",
+    "method": "get_discussions_by_donates",
+    "params": ["query"]
+  },
+  {
+    "api": "tags",
     "method": "get_discussions_by_hot",
     "params": ["query"]
   },
