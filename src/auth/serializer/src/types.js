@@ -240,6 +240,26 @@ Types.string =
     }
     };
 
+Types.fixed_string =
+    {fromByteBuffer(b){
+        return Types.string.fromByteBuffer(b);
+    },
+    appendByteBuffer(b, object){
+        v.required(object);
+        if (object.length > 16) throw new Error("account name cannot be longer than 16 characters");
+        Types.string.appendByteBuffer(b, object);
+        return;
+    },
+    fromObject(object){
+        v.required(object);
+        if (object.length > 16) throw new Error("account name cannot be longer than 16 characters");
+        return Types.string.fromObject(object);
+    },
+    toObject(object, debug = {}){
+        return Types.string.toObject(object, debug);
+    }
+    };
+
 Types.string_binary =
     {fromByteBuffer(b){
         var b_copy;
