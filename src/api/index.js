@@ -7,197 +7,58 @@ import newDebug from 'debug';
 import config from '../config';
 import methods from './methods';
 import { camelCase } from '../utils';
+import transports from './transports';
 
 const debugEmitters = newDebug('golos:emitters');
-const debugProtocol = newDebug('golos:protocol');
 const debugSetup = newDebug('golos:setup');
-const debugWs = newDebug('golos:ws');
-
-let WebSocket;
-if (isNode) {
-  WebSocket = require('ws'); // eslint-disable-line global-require
-} else if (typeof window !== 'undefined') {
-  WebSocket = window.WebSocket;
-} else {
-  throw new Error('Couldn\'t decide on a `WebSocket` class');
-}
 
 const DEFAULTS = {
   id: 0,
 };
-
-const cbMethods = [
-  'set_block_applied_callback',
-  'set_pending_transaction_callback',
-  'set_callback'
-];
-
-const expectedResponseMs = process.env.EXPECTED_RESPONSE_MS || 2000;
 
 class Golos extends EventEmitter {
   constructor(options = {}) {
     super(options);
     defaults(options, DEFAULTS);
     this.options = cloneDeep(options);
-    this.id = 0;
-    this.inFlight = 0;
-    this.currentP = Promise.fulfilled();
-    this.isOpen = false;
-    this.releases = [];
-    this.requests = {};
-    this.callbacks = {};
+  }
+  _setTransport(url) {
+      if (url && url.match('^((http|https)?:\/\/)')) {
+        this.transport = new transports.http();
+      } else if (url && url.match('^((ws|wss)?:\/\/)')) {
+        this.transport = new transports.ws();
+      } else {
+      throw Error("unknown transport! [" + url + "]");
+    }
   }
 
   setWebSocket(url) {
     console.warn("golos.api.setWebSocket(url) is now deprecated instead use golos.config.set('websocket',url)");
     debugSetup('Setting WS', url);
     config.set('websocket', url);
+    this._setTransport(url);
     this.stop();
   }
 
   start() {
-    if (this.startP) {
-      return this.startP;
-    }
-
-    const startP = new Promise((resolve, reject) => {
-      if (startP !== this.startP) return;
-      const url = config.get('websocket');
-      this.ws = new WebSocket(url);
-
-      const releaseOpen = this.listenTo(this.ws, 'open', () => {
-        debugWs('Opened WS connection with', url);
-        this.isOpen = true;
-        releaseOpen();
-        resolve();
-      });
-
-      const releaseClose = this.listenTo(this.ws, 'close', () => {
-        debugWs('Closed WS connection with', url);
-        this.isOpen = false;
-        delete this.ws;
-        this.stop();
-
-        if (startP.isPending()) {
-          reject(new Error('The WS connection was closed before this operation was made'));
-        }
-      });
-
-      const releaseMessage = this.listenTo(this.ws, 'message', (message) => {
-        debugWs('Received message', message.data);
-        const data = JSON.parse(message.data);
-        const id = data.id;
-        const request = this.requests[id] || this.callbacks[id];
-        if (!request) {
-          debugWs('Golos.onMessage error: unknown request ', id);
-          return;
-        }
-        delete this.requests[id];
-        this.onMessage(data, request);
-      });
-
-      this.releases = this.releases.concat([
-        releaseOpen,
-        releaseClose,
-        releaseMessage,
-      ]);
-    });
-
-    this.startP = startP;
-
-    return startP;
+    const url = config.get('websocket');
+    this._setTransport(url);
+    return this.transport.start();
   }
 
   stop() {
     debugSetup('Stopping...');
-    if (this.ws) this.ws.close();
-    delete this.startP;
-    delete this.ws;
-    this.releases.forEach((release) => release());
-    this.releases = [];
-  }
-
-  listenTo(target, eventName, callback) {
-    debugEmitters('Adding listener for', eventName, 'from', target.constructor.name);
-    if (target.addEventListener) target.addEventListener(eventName, callback);
-    else target.on(eventName, callback);
-
-    return () => {
-      debugEmitters('Removing listener for', eventName, 'from', target.constructor.name);
-      if (target.removeEventListener) target.removeEventListener(eventName, callback);
-      else target.removeListener(eventName, callback);
-    };
-  }
-
-  onMessage(message, request) {
-    const {api, data, resolve, reject, start_time} = request;
-    debugWs('-- Golos.onMessage -->', message.id);
-    const errorCause = message.error;
-    if (errorCause) {
-      const err = new Error(
-        // eslint-disable-next-line prefer-template
-        (errorCause.message || 'Failed to complete operation') +
-        ' (see err.payload for the full error payload)'
-      );
-      err.payload = message;
-      reject(err);
-      return;
-    }
-
-    debugProtocol('Resolved', api, data, '->', message);
-    if (cbMethods.includes(data.method)) {
-      this.callbacks[message.id].cb(null, message.result);
-    } else {
-      delete this.requests[message.id];
-      resolve(message.result);
-    }
+    const ret = this.transport.stop();
+    this.transport = null;
+    return ret;
   }
 
   send(api, data, callback) {
     debugSetup('Golos::send', api, data);
-    const id = data.id || this.id++;
-    const startP = this.start();
-
-    this.currentP = startP
-    .then(() => new Promise((resolve, reject) => {
-        if (!this.ws) {
-          reject(new Error('The WS connection was closed while this request was pending'));
-          return;
-        }
-
-        const payload = JSON.stringify({
-          id,
-          method: 'call',
-          jsonrpc: '2.0',
-          params: [
-            api,
-            data.method,
-            data.params,
-          ],
-        });
-
-        debugWs('Sending message', payload);
-        if (cbMethods.includes(data.method)) {
-          this.callbacks[id] = {
-            api,
-            data,
-            cb: callback
-          };
-        } else {
-          this.requests[id] = {
-            api,
-            data,
-            resolve,
-            reject,
-            start_time: Date.now()
-          };
-        }
-
-        this.ws.send(payload);
-      }))
-      .nodeify(callback);
-
-    return this.currentP;
+    if (!this.transport) {
+        this.start();
+    }
+    return this.transport.send(api, data, callback);
   }
 
   streamBlockNumber(mode = 'head', callback, ts = 200) {
