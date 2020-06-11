@@ -1,5 +1,5 @@
 {
-  "websocket": "wss://ws.golos.io",
+  "websocket": "wss://api-full.golos.id/ws",
   "address_prefix": "GLS",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
   "broadcast_transaction_with_callback": false
