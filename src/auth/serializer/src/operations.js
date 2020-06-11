@@ -41,11 +41,13 @@ const {
     uint32,
     uint64,
     string,
+    fixed_string,
     string_binary,
     bytes,
     bool,
     array,
     static_variant,
+    variant_object,
     map,
     set,
     public_key,
@@ -301,7 +303,7 @@ let account_create = new Serializer(
     "account_create", {
         fee: asset,
         creator: string,
-        new_account_name: string,
+        new_account_name: fixed_string,
         owner: authority,
         active: authority,
         posting: authority,
@@ -627,7 +629,7 @@ let account_create_with_delegation = new Serializer(
         fee: asset,
         delegation: asset,
         creator: string,
-        new_account_name: string,
+        new_account_name: fixed_string,
         owner: authority,
         active: authority,
         posting: authority,
@@ -636,6 +638,20 @@ let account_create_with_delegation = new Serializer(
         extensions: set(static_variant([
             account_referral
         ]))
+  }
+);
+  
+let account_create_with_invite = new Serializer(
+    "account_create_with_invite", {
+        invite_secret: string,
+        creator: string,
+        new_account_name: fixed_string,
+        owner: authority,
+        active: authority,
+        posting: authority,
+        memo_key: public_key,
+        json_metadata: string,
+        extensions: set(future_extensions)
   }
 );
 
@@ -771,6 +787,48 @@ let chain_properties_22 = new Serializer(
   }
 );
 
+let chain_properties_23 = new Serializer(
+  4, {
+        account_creation_fee: asset,
+        maximum_block_size: uint32,
+        sbd_interest_rate: uint16,
+        create_account_min_golos_fee: asset,
+        create_account_min_delegation: asset,
+        create_account_delegation_time: uint32,
+        min_delegation: asset,
+        max_referral_interest_rate: uint16,
+        max_referral_term_sec: uint32,
+        min_referral_break_fee: asset,
+        max_referral_break_fee: asset,
+        posts_window: uint16,
+        posts_per_window: uint16,
+        comments_window: uint16,
+        comments_per_window: uint16,
+        votes_window: uint16,
+        votes_per_window: uint16,
+        auction_window_size: uint16,
+        max_delegated_vesting_interest_rate: uint16,
+        custom_ops_bandwidth_multiplier: uint16,
+        min_curation_percent: uint16,
+        max_curation_percent: uint16,
+        curation_reward_curve: uint64,
+        allow_distribute_auction_reward: bool,
+        allow_return_auction_reward_to_fund: bool,
+        worker_reward_percent: uint16,
+        witness_reward_percent: uint16,
+        vesting_reward_percent: uint16,
+        worker_request_creation_fee: asset,
+        worker_request_approve_min_percent: uint16,
+        sbd_debt_convert_rate: uint16,
+        vote_regeneration_per_day: uint32,
+        witness_skipping_reset_time: uint32,
+        witness_idleness_time: uint32,
+        account_idleness_time: uint32,
+        claim_idleness_time: uint32,
+        min_invite_balance: asset,
+  }
+);
+
 let chain_properties_update = new Serializer(
     "chain_properties_update", {
         owner: string,
@@ -779,6 +837,7 @@ let chain_properties_update = new Serializer(
             chain_properties_18,
             chain_properties_19,
             chain_properties_22,
+            chain_properties_23,
         ])
   }
 );
@@ -842,6 +901,73 @@ let worker_request_vote = new Serializer(
         author: string,
         permlink: string,
         vote_percent: int16,
+        extensions: set(future_extensions)
+    }
+);
+
+let claim = new Serializer(
+    "claim", {
+        from: string,
+        to: string,
+        amount: asset,
+        to_vesting: bool,
+        extensions: set(future_extensions)
+    }
+);
+
+let donate_memo = new Serializer(
+    "donate_memo", {
+        app: string,
+        version: uint16,
+        target: types.variant_object,
+        comment: optional(string)
+    }
+);
+
+let donate = new Serializer(
+    "donate", {
+        from: string,
+        to: string,
+        amount: asset,
+        memo: donate_memo,
+        extensions: set(future_extensions)
+    }
+);
+
+let transfer_to_tip = new Serializer(
+    "transfer_to_tip", {
+        from: string,
+        to: string,
+        amount: asset,
+        memo: string,
+        extensions: set(future_extensions)
+    }
+);
+
+let transfer_from_tip = new Serializer(
+    "transfer_from_tip", {
+        from: string,
+        to: string,
+        amount: asset,
+        memo: string,
+        extensions: set(future_extensions)
+    }
+);
+
+let invite = new Serializer(
+    "invite", {
+        creator: string,
+        balance: asset,
+        invite_key: public_key,
+        extensions: set(future_extensions)
+    }
+);
+
+let invite_claim = new Serializer(
+    "invite_claim", {
+        initiator: string,
+        receiver: string,
+        invite_secret: string,
         extensions: set(future_extensions)
     }
 );
@@ -1015,6 +1141,13 @@ operation.st_operations = [
     worker_request,
     worker_request_delete,
     worker_request_vote,
+    claim,
+    donate,
+    transfer_to_tip,
+    transfer_from_tip,
+    invite,
+    invite_claim,
+    account_create_with_invite,
     fill_convert_request,
     author_reward,
     curation_reward,

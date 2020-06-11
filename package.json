@@ -1,6 +1,6 @@
 {
   "name": "golos-classic-js",
-  "version": "0.7.12",
+  "version": "0.7.42",
   "description": "Golos-js the JavaScript library with API for GOLOS blockchain",
   "main": "lib/index.js",
   "scripts": {
@@ -43,6 +43,7 @@
     "create-hash": "^1.1.2",
     "create-hmac": "^1.1.4",
     "cross-env": "^5.0.0",
+    "cross-fetch": "^3.0.0",
     "debug": "^2.6.8",
     "detect-node": "^2.0.3",
     "ecurve": "^1.0.5",

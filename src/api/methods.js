@@ -116,6 +116,11 @@ module.exports = [
   },
   {
     "api": "tags",
+    "method": "get_discussions_by_donates",
+    "params": ["query"]
+  },
+  {
+    "api": "tags",
     "method": "get_discussions_by_hot",
     "params": ["query"]
   },
@@ -208,6 +213,11 @@ module.exports = [
     "api": "social_network",
     "method": "get_account_votes",
     "params": ["voter", "from", "voteLimit"]
+  },
+  {
+    "api": "social_network",
+    "method": "get_donates",
+    "params": ["target", "from", "to", "limit", "offset", "join_froms"]
   },
   {
     "api": "database_api",
@@ -341,6 +351,11 @@ module.exports = [
     "api": "database_api",
     "method": "get_expiring_vesting_delegations",
     "params": ["account", "from", "limit"]
+  },
+  {
+    "api": "database_api",
+    "method": "get_invite",
+    "params": ["invite_key"]
   },
   {
     "api": "follow",
