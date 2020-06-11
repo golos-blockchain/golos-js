@@ -32,7 +32,7 @@ describe.skip('golos.api:', function () {
     it('works', () => {
       golos.setWebSocket('ws://localhost');
       config.get('websocket').should.be.eql('ws://localhost');
-      config.set('websocket', 'wss://ws.golos.io')
+      config.set('websocket', 'wss://api-full.golos.id/ws')
     });
   });
 
