@@ -690,5 +690,59 @@ module.exports = [
       "extensions"
     ]
   },
+  {
+    "roles": ["active"],
+    "operation": "asset_create",
+    "params": [
+      "creator",
+      "max_supply",
+      "allow_fee",
+      "allow_override_transfer",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "asset_update",
+    "params": [
+      "creator",
+      "symbol",
+      "symbols_whitelist",
+      "fee_percent",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "asset_issue",
+    "params": [
+      "creator",
+      "amount",
+      "to",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "asset_transfer",
+    "params": [
+      "creator",
+      "symbol",
+      "new_owner",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "override_transfer",
+    "params": [
+      "creator",
+      "from",
+      "to",
+      "amount",
+      "memo",
+      "extensions"
+    ]
+  },
 ]
 
