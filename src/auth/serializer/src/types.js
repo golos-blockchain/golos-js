@@ -19,21 +19,26 @@ const TEST = process.env.NODE_ENV === "test"
 /**
 * Asset symbols contain the following information
 *
-*  4 bit PRECISION
-*  4 bit RESERVED
-*  CHAR[6] up to 6 upper case alpha numeric ascii characters,
+*  4 bit PRECISION (from 0 to 15)
+*  4 bit VERSION (if whole first byte >= 100, then version is 2, and you should subtract 100 to obtain PRECISION)
+*  CHAR[] up to 6 (v1) or 14 (v2) upper case alpha numeric ascii characters,
 *  char = \0  null terminated
 *
-*  It is treated as a uint64_t for all internal operations, but
+*  It is treated as a uint64_t (v1) or uint128_t (v2) for all internal operations, but
 *  is easily converted to something that can be displayed.
 */
 Types.asset = {
     fromByteBuffer(b){
         let amount = b.readInt64()
+
         let precision = b.readUint8()
-        let b_copy = b.copy(b.offset, b.offset + 7)
+        const is_v2 = precision >= 100
+        if (is_v2) precision -= 100
+        const symbol_size = is_v2 ? 15 : 7
+        let b_copy = b.copy(b.offset, b.offset + symbol_size)
         let symbol = new Buffer(b_copy.toBinary(), "binary").toString().replace(/\x00/g, "")
-        b.skip(7);
+        b.skip(symbol_size);
+
         // "1.000 GOLOS" always written with full precision
         let amount_string = fromImpliedDecimal(amount, precision)
         return amount_string + " " + symbol
@@ -45,15 +50,19 @@ Types.asset = {
             throw new Error("Expecting amount like '99.000 SYMBOL', instead got '" + object + "'")
 
         let [ amount, symbol ] = object.split(" ")
-        if(symbol.length > 6)
-            throw new Error("Symbols are not longer than 6 characters " + symbol + "-"+ symbol.length)
+        if(symbol.length > 14)
+            throw new Error("Symbols are not longer than 14 characters " + symbol + "-"+ symbol.length)
+        const is_v2 = symbol.length > 6
+        const symbol_size = is_v2 ? 15 : 7
 
         b.writeInt64(v.to_long(amount.replace(".", "")))
+
         let dot = amount.indexOf(".") // 0.000
         let precision = dot === -1 ? 0 : amount.length - dot - 1
+        if (is_v2) precision += 100
         b.writeUint8(precision)
         b.append(symbol.toUpperCase(), 'binary')
-        for(let i = 0; i < 7 - symbol.length; i++)
+        for(let i = 0; i < symbol_size - symbol.length; i++)
             b.writeUint8(0)
         return
     },
