@@ -418,20 +418,27 @@ golos.api.getRecoveryRequest(account, function(err, result) {
 ```js
 /**
  * getTicker() receive statistic values of the internal GBG:GOLOS market for the last 24 hours
+ * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
 */
-golos.api.getTicker(function(err, result) {
+golos.api.getTicker(["GOLOS", "GBG"], function(err, result) {
   console.log(err, result);
 });
 ```
 ### Get Order Book
-```
-golos.api.getOrderBook(limit, function(err, result) {
+```js
+/**
+ * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
+*/
+golos.api.getOrderBook(limit, ["GOLOS", "GBG"], function(err, result) {
   console.log(err, result);
 });
 ```
 ### Get Open Orders
-```
-golos.api.getOpenOrders(owner, function(err, result) {
+```js
+/**
+ * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
+*/
+golos.api.getOpenOrders(owner, ["GOLOS", "GBG"], function(err, result) {
   console.log(err, result);
 });
 ```
