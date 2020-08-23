@@ -698,6 +698,7 @@ module.exports = [
       "max_supply",
       "allow_fee",
       "allow_override_transfer",
+      "json_metadata",
       "extensions"
     ]
   },

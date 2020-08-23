@@ -1022,6 +1022,7 @@ let asset_create = new Serializer(
         max_supply: asset,
         allow_fee: bool,
         allow_override_transfer: bool,
+        json_metadata: string,
         extensions: set(future_extensions)
     }
 );
