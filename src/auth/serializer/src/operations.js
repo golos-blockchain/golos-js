@@ -1131,9 +1131,13 @@ let fill_order = new Serializer(
         current_owner: string,
         current_orderid: uint32,
         current_pays: asset,
+        current_trade_fee: asset,
+        current_trade_fee_receiver: string,
         open_owner: string,
         open_orderid: uint32,
-        open_pays: asset
+        open_pays: asset,
+        open_trade_fee: asset,
+        open_trade_fee_receiver: string
     }
 );
 

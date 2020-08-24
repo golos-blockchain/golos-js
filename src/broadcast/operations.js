@@ -452,9 +452,13 @@ module.exports = [
       "current_owner",
       "current_orderid",
       "current_pays",
+      "current_trade_fee",
+      "current_trade_fee_receiver",
       "open_owner",
       "open_orderid",
-      "open_pays"
+      "open_pays",
+      "open_trade_fee",
+      "open_trade_fee_receiver"
     ]
   },
   {
