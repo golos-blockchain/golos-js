@@ -1033,6 +1033,7 @@ let asset_update = new Serializer(
         symbol: string,
         symbols_whitelist: set(string),
         fee_percent: uint16,
+        json_metadata: string,
         extensions: set(future_extensions)
     }
 );

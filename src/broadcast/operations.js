@@ -710,6 +710,7 @@ module.exports = [
       "symbol",
       "symbols_whitelist",
       "fee_percent",
+      "json_metadata",
       "extensions"
     ]
   },
