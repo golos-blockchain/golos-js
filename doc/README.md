@@ -1218,6 +1218,87 @@ golos.broadcast.cancelTransferFromSavings(wif, from, requestId, function(err, re
   console.log(err, result);
 });
 ```
+### Transfer To Tip
+```
+  golos.broadcast.transferToTip(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '', '1.000 SUPER', 'Hello world!',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Donate
+```
+golos.broadcast.donate(wif, 'alice', 'bob', '1.000 GOLOS', {app: 'golos-id', version: 1, comment: 'Hello', target: {author: 'bob', permlink: 'test'}}, [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Invite
+```
+  golos.broadcast.invite(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '11.000 SUPER', 'GLS7Pbawjjr71ybgT6L2yni3B3LXYiJqEGnuFSq1MV9cjnV24dMG3',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Invite Claim
+```
+  golos.broadcast.inviteClaim(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'cyberfounder', '5JFZC7AtEe1wF2ce6vPAUxDeevzYkPgmtR14z9ZVgvCCtrFAaLw',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+
+## UIA Examples
+
+### Asset Create
+```
+  golos.broadcast.assetCreate(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '1000.000 SUPER', true, true, "{\"image_url\":\"https://market.rudex.org/asset-symbols/rudex.golos.png\",\"description\":\"https://golos.id/\"}",
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Update
+```
+  golos.broadcast.assetUpdate(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'SUPER', ['GOLOS'], 10000, "{\"image_url\":\"https://market.rudex.org/asset-symbols/rudex.golos.png\",\"description\":\"http://golos.id/\"}",
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Issue
+```
+  golos.broadcast.assetIssue(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '1000.000 SUPER', '',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Override Transfer
+```
+  golos.broadcast.overrideTransfer(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'test', 'test2', '1.000 SUPER', 'Hello world!',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Transfer
+```
+  golos.broadcast.assetTransfer(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'SUPER', 'test',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
 
 # Auth
 
