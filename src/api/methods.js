@@ -501,6 +501,11 @@ module.exports = [
     "params": ["owner", `pair=${DEFAULT_MARKET_PAIR}`]
   },
   {
+    "api": "market_history",
+    "method": "get_fillable_orders",
+    "params": ["market_price"]
+  },
+  {
     "api": "private_message",
     "method": "get_inbox",
     "params": ["to", "query"]
