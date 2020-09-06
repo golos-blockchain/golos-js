@@ -28,11 +28,11 @@ golos.api.getAccounts(['ned', 'dan'], function(err, response){
 
 Library support 2 transport types: ws, wss for websocket and http, https for pure HTTP JSONRPC.
 
-wss://api.golos.blckchnd.com/ws<br/>
+wss://api-golos.blckchnd.com/ws<br/>
 wss://api.aleksw.space/ws<br/>
 wss://golos.lexai.host/ws<br/><br/>
 
-https://api.golos.blckchnd.com/<br/>
+https://api-golos.blckchnd.com/<br/>
 https://api.aleksw.space/<br/>
 https://golos.lexai.host/<br/>
 
