@@ -750,5 +750,36 @@ module.exports = [
       "extensions"
     ]
   },
+  {
+    "roles": ["active"],
+    "operation": "invite_donate",
+    "params": [
+      "from",
+      "invite_key",
+      "amount",
+      "memo",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "invite_transfer",
+    "params": [
+      "from",
+      "to",
+      "amount",
+      "memo",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "limit_order_cancel_ex",
+    "params": [
+      "owner",
+      "orderid",
+      "extensions"
+    ]
+  },
 ]
 

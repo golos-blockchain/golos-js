@@ -91,6 +91,7 @@ export const methods_0_18_0 = [
     "get_ticker",
     "get_trade_history",
     "get_volume",
+    "get_depth",
     "get_inbox",
     "get_outbox",
     "get_thread",

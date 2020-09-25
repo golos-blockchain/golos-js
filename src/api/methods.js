@@ -461,6 +461,12 @@ module.exports = [
   },
   {
     "api": "market_history",
+    "method": "get_depth",
+    "has_default_values": true,
+    "params": [`pair=${DEFAULT_MARKET_PAIR}`]
+  },
+  {
+    "api": "market_history",
     "method": "get_order_book",
     "has_default_values": true,
     "params": ["limit", `pair=${DEFAULT_MARKET_PAIR}`]

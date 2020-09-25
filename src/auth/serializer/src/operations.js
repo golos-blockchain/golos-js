@@ -998,12 +998,20 @@ let transfer_from_tip = new Serializer(
     }
 );
 
+const is_invite_referral = new Serializer(
+    0, {
+        is_referral: bool
+    }
+);
+
 let invite = new Serializer(
     "invite", {
         creator: string,
         balance: asset,
         invite_key: public_key,
-        extensions: set(future_extensions)
+        extensions: set(static_variant([
+            is_invite_referral
+        ]))
     }
 );
 
@@ -1064,6 +1072,42 @@ let override_transfer = new Serializer(
         amount: asset,
         memo: string,
         extensions: set(future_extensions)
+    }
+);
+
+let invite_donate = new Serializer(
+    "invite_donate", {
+        from: string,
+        invite_key: public_key,
+        amount: asset,
+        memo: string,
+        extensions: set(future_extensions)
+    }
+);
+
+let invite_transfer = new Serializer(
+    "invite_transfer", {
+        from: public_key,
+        to: public_key,
+        amount: asset,
+        memo: string,
+        extensions: set(future_extensions)
+    }
+);
+
+const direction_to_cancel = new Serializer(
+    0, {
+        direction: price
+    }
+);
+
+let limit_order_cancel_ex = new Serializer(
+    "limit_order_cancel_ex", {
+        owner: string,
+        orderid: uint32,
+        extensions: set(static_variant([
+            direction_to_cancel
+        ]))
     }
 );
 
@@ -1252,6 +1296,10 @@ operation.st_operations = [
     asset_issue,
     asset_transfer,
     override_transfer,
+    invite_donate,
+    invite_transfer,
+    limit_order_cancel_ex,
+
     fill_convert_request,
     author_reward,
     curation_reward,
