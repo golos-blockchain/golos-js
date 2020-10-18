@@ -1095,9 +1095,11 @@ let invite_transfer = new Serializer(
     }
 );
 
-const direction_to_cancel = new Serializer(
+const pair_to_cancel = new Serializer(
     0, {
-        direction: price
+        base: string,
+        quote: string,
+        reverse: bool,
     }
 );
 
@@ -1106,7 +1108,7 @@ let limit_order_cancel_ex = new Serializer(
         owner: string,
         orderid: uint32,
         extensions: set(static_variant([
-            direction_to_cancel
+            pair_to_cancel
         ]))
     }
 );
