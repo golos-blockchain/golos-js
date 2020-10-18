@@ -221,7 +221,7 @@ module.exports = [
   {
     "api": "social_network",
     "method": "get_donates",
-    "params": ["target", "from", "to", "limit", "offset", "join_froms"]
+    "params": ["uia", "target", "from", "to", "limit", "offset", "join_froms"]
   },
   {
     "api": "database_api",
