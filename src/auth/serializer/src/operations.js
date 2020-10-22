@@ -869,6 +869,7 @@ let chain_properties_24 = new Serializer(
         claim_idleness_time: uint32,
         min_invite_balance: asset,
         asset_creation_fee: asset,
+        invite_transfer_interval_sec: uint32,
   }
 );
 
