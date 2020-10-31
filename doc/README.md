@@ -1307,6 +1307,13 @@ golos.broadcast.donate(wif, 'alice', 'bob', '1.000 GOLOS', {app: 'golos-id', ver
 });
 ```
 
+### Donate
+```
+golos.broadcast.donate(wif, 'alice', 'bob', '1.000 GOLOS', {app: 'golos-id', version: 1, comment: 'Hello', target: {author: 'bob', permlink: 'test'}}, [], function(err, result) {
+  console.log(err, result);
+});
+```
+
 # Auth
 
 ### Verify
