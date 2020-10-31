@@ -418,20 +418,27 @@ golos.api.getRecoveryRequest(account, function(err, result) {
 ```js
 /**
  * getTicker() receive statistic values of the internal GBG:GOLOS market for the last 24 hours
+ * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
 */
-golos.api.getTicker(function(err, result) {
+golos.api.getTicker(["GOLOS", "GBG"], function(err, result) {
   console.log(err, result);
 });
 ```
 ### Get Order Book
-```
-golos.api.getOrderBook(limit, function(err, result) {
+```js
+/**
+ * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
+*/
+golos.api.getOrderBook(limit, ["GOLOS", "GBG"], function(err, result) {
   console.log(err, result);
 });
 ```
 ### Get Open Orders
-```
-golos.api.getOpenOrders(owner, function(err, result) {
+```js
+/**
+ * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
+*/
+golos.api.getOpenOrders(owner, ["GOLOS", "GBG"], function(err, result) {
   console.log(err, result);
 });
 ```
@@ -1026,10 +1033,52 @@ golos.broadcast.limitOrderCancel(wif, owner, orderid, function(err, result) {
   console.log(err, result);
 });
 ```
+#### Example:
+```js
+let wif = '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS'; // active private key
+
+golos.broadcast.limitOrderCancel(wif, 'cyberfounder', orderid, function(err, res) {
+  if (err) {
+    console.log(err);
+    alert(err);
+    return;
+  }
+  alert('order canceled');
+});
+```
 ### Limit Order Create
 ```
 golos.broadcast.limitOrderCreate(wif, owner, orderid, amountToSell, minToReceive, fillOrKill, expiration, function(err, result) {
   console.log(err, result);
+});
+```
+#### Example:
+```js
+let wif = '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS'; // active private key
+
+let orderid = Math.floor(Date.now() / 1000); // it is golos.id way and it is preferred
+
+let expiration = new Date();
+expiration.setHours(expiration.getHours() + 1);
+expiration = expiration.toISOString().substr(0, 19); // i.e. 2020-09-07T11:33:00
+
+golos.broadcast.limitOrderCreate(wif, 'cyberfounder', orderid, '1000.000000 AAA', '1000.000 BBB', false, expiration, function(err, res) {
+  if (err) {
+    console.log(err);
+    alert(err);
+    return;
+  }
+  alert('order created');
+});
+```
+Hint: to detect what order is filled you can:  
+a) create order with fillOrKill = true, which will fail order creation if not filled instantly,  
+b) or use callbacks to wait until order is filled,  
+c) or repeative call `getAccountHistory` to wait until order is filled: 
+```js
+// 1st argument is owner of one of two orders in pair
+golos.api.getAccountHistory('cyberfounder', -1, 1000, {select_ops: [ 'fill_order']}, function(err, result) {
+  // repeat call if still not filled
 });
 ```
 ### Limit Order Create2
@@ -1166,6 +1215,94 @@ golos.broadcast.transferFromSavings(wif, from, requestId, to, amount, memo, func
 ### Cancel Transfer From Savings
 ```
 golos.broadcast.cancelTransferFromSavings(wif, from, requestId, function(err, result) {
+  console.log(err, result);
+});
+```
+### Transfer To Tip
+```
+  golos.broadcast.transferToTip(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '', '1.000 SUPER', 'Hello world!',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Donate
+```
+golos.broadcast.donate(wif, 'alice', 'bob', '1.000 GOLOS', {app: 'golos-id', version: 1, comment: 'Hello', target: {author: 'bob', permlink: 'test'}}, [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Invite
+```
+  golos.broadcast.invite(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '11.000 SUPER', 'GLS7Pbawjjr71ybgT6L2yni3B3LXYiJqEGnuFSq1MV9cjnV24dMG3',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Invite Claim
+```
+  golos.broadcast.inviteClaim(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'cyberfounder', '5JFZC7AtEe1wF2ce6vPAUxDeevzYkPgmtR14z9ZVgvCCtrFAaLw',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+
+## UIA Examples
+
+### Asset Create
+```
+  golos.broadcast.assetCreate(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '1000.000 SUPER', true, true, "{\"image_url\":\"https://market.rudex.org/asset-symbols/rudex.golos.png\",\"description\":\"https://golos.id/\"}",
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Update
+```
+  golos.broadcast.assetUpdate(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'SUPER', ['GOLOS'], 10000, "{\"image_url\":\"https://market.rudex.org/asset-symbols/rudex.golos.png\",\"description\":\"http://golos.id/\"}",
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Issue
+```
+  golos.broadcast.assetIssue(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '1000.000 SUPER', '',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Override Transfer
+```
+  golos.broadcast.overrideTransfer(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'test', 'test2', '1.000 SUPER', 'Hello world!',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Transfer
+```
+  golos.broadcast.assetTransfer(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'SUPER', 'test',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+
+### Donate
+```
+golos.broadcast.donate(wif, 'alice', 'bob', '1.000 GOLOS', {app: 'golos-id', version: 1, comment: 'Hello', target: {author: 'bob', permlink: 'test'}}, [], function(err, result) {
   console.log(err, result);
 });
 ```

@@ -2,6 +2,10 @@ const MOST_RECENT = -1;
 const ACCOUNT_HISTORY_DEFAULT_LIMIT = 100;
 const DEFAULT_VOTES_LIMIT = 10000;
 const DEFAULT_VOTES_OFFSET = 0;
+const DEFAULT_MARKET_PAIR = '["GOLOS", "GBG"]';
+const DEFAULT_ASSETS_LIMIT = 20;
+const EMPTY_STRING = '';
+const EMPTY_ARRAY = '[]';
 
 module.exports = [
   {
@@ -217,7 +221,7 @@ module.exports = [
   {
     "api": "social_network",
     "method": "get_donates",
-    "params": ["target", "from", "to", "limit", "offset", "join_froms"]
+    "params": ["uia", "target", "from", "to", "limit", "offset", "join_froms"]
   },
   {
     "api": "database_api",
@@ -358,6 +362,17 @@ module.exports = [
     "params": ["invite_key"]
   },
   {
+    "api": "database_api",
+    "method": "get_assets",
+    "has_default_values": true,
+    "params": [`creator=${EMPTY_STRING}`, `symbols=${EMPTY_ARRAY}`, `from=${EMPTY_STRING}`, `limit=${DEFAULT_ASSETS_LIMIT}`]
+  },
+  {
+    "api": "database_api",
+    "method": "get_accounts_balances",
+    "params": ['account_names']
+  },
+  {
     "api": "follow",
     "method": "get_followers",
     "params": ["following", "startFollower", "followType", "limit"]
@@ -435,37 +450,50 @@ module.exports = [
   {
     "api": "market_history",
     "method": "get_ticker",
-    "params": []
+    "has_default_values": true,
+    "params": [`pair=${DEFAULT_MARKET_PAIR}`]
   },
   {
     "api": "market_history",
     "method": "get_volume",
-    "params": []
+    "has_default_values": true,
+    "params": [`pair=${DEFAULT_MARKET_PAIR}`]
+  },
+  {
+    "api": "market_history",
+    "method": "get_depth",
+    "has_default_values": true,
+    "params": [`pair=${DEFAULT_MARKET_PAIR}`]
   },
   {
     "api": "market_history",
     "method": "get_order_book",
-    "params": ["limit"]
+    "has_default_values": true,
+    "params": ["limit", `pair=${DEFAULT_MARKET_PAIR}`]
   },
   {
     "api": "market_history",
+    "has_default_values": true,
     "method": "get_order_book_extended",
-    "params": ["limit"]
+    "params": ["limit", `pair=${DEFAULT_MARKET_PAIR}`]
   },
   {
     "api": "market_history",
+    "has_default_values": true,
     "method": "get_trade_history",
-    "params": ["start", "end", "limit"]
+    "params": ["start", "end", "limit", `pair=${DEFAULT_MARKET_PAIR}`]
   },
   {
     "api": "market_history",
     "method": "get_recent_trades",
-    "params": ["limit"]
+    "has_default_values": true,
+    "params": ["limit", `pair=${DEFAULT_MARKET_PAIR}`]
   },
   {
     "api": "market_history",
     "method": "get_market_history",
-    "params": ["bucket_seconds" , "start", "end"]
+    "has_default_values": true,
+    "params": ["bucket_seconds" , "start", "end", `pair=${DEFAULT_MARKET_PAIR}`]
   },
   {
     "api": "market_history",
@@ -475,7 +503,13 @@ module.exports = [
   {
     "api": "market_history",
     "method": "get_open_orders",
-    "params": ["owner"]
+    "has_default_values": true,
+    "params": ["owner", `pair=${DEFAULT_MARKET_PAIR}`]
+  },
+  {
+    "api": "market_history",
+    "method": "get_fillable_orders",
+    "params": ["market_price"]
   },
   {
     "api": "private_message",

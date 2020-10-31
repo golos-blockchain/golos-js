@@ -452,9 +452,13 @@ module.exports = [
       "current_owner",
       "current_orderid",
       "current_pays",
+      "current_trade_fee",
+      "current_trade_fee_receiver",
       "open_owner",
       "open_orderid",
-      "open_pays"
+      "open_pays",
+      "open_trade_fee",
+      "open_trade_fee_receiver"
     ]
   },
   {
@@ -687,6 +691,93 @@ module.exports = [
       "initiator",
       "receiver",
       "invite_secret",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "asset_create",
+    "params": [
+      "creator",
+      "max_supply",
+      "allow_fee",
+      "allow_override_transfer",
+      "json_metadata",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "asset_update",
+    "params": [
+      "creator",
+      "symbol",
+      "symbols_whitelist",
+      "fee_percent",
+      "json_metadata",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "asset_issue",
+    "params": [
+      "creator",
+      "amount",
+      "to",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "asset_transfer",
+    "params": [
+      "creator",
+      "symbol",
+      "new_owner",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "override_transfer",
+    "params": [
+      "creator",
+      "from",
+      "to",
+      "amount",
+      "memo",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "invite_donate",
+    "params": [
+      "from",
+      "invite_key",
+      "amount",
+      "memo",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "invite_transfer",
+    "params": [
+      "from",
+      "to",
+      "amount",
+      "memo",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "limit_order_cancel_ex",
+    "params": [
+      "owner",
+      "orderid",
       "extensions"
     ]
   },
