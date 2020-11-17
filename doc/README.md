@@ -1366,6 +1366,19 @@ var resultIsWif = golos.auth.isWif(privWif);
 console.log('isWif', resultIsWif);
 ```
 
+### Get Wif From Password Or Wif (Login Form Vaildation)
+```
+golos.auth.getWif(name, privWifOrPassword, role = 'posting');
+```
+This method is recommended to implement login forms in dApps on Golos Blockhain. Call it on entered login and password. If it is master password, it converts it to wif (with `toWif`) and returns it. If it is wif, it returns it without changes. Otherwise, if password format is wrong, it returns null. So if not null, you should compare it woth account's public key (can be got from `getAccounts`) using `wifIsValid`, and if true, authorize the user.
+#### Example:
+```js
+var name = 'alice';
+var privWifOrPassword = '5J...'; // or 'P5J...'
+var privWifPosting = golos.auth.getWif(name, privWifOrPassword);
+console.log('getWif', privWifPosting);
+```
+
 ### To Wif
 ```
 golos.auth.toWif(name, password, role);
