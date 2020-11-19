@@ -556,4 +556,14 @@ module.exports = [
     "method": "get_worker_request_votes",
     "params": ["author", "permlink", "start_voter", "limit"]
   },
+  {
+    "api": "account_notes",
+    "method": "get_values_settings",
+    "params": []
+  },
+  {
+    "api": "account_notes",
+    "method": "get_value",
+    "params": ["account", "key"]
+  },
 ]
