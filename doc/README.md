@@ -1,6 +1,6 @@
 # Documentation
 
-- [Database API](#api)
+- [Database](#api)
     - [Subscriptions](#subscriptions)
     - [Tags](#tags)
     - [Blocks and transactions](#blocks-and-transactions)
@@ -11,10 +11,11 @@
     - [Votes](#votes)
     - [Content](#content)
     - [Witnesses](#witnesses)
-- [Login API](#login)
-- [Follow API](#follow-api)
-- [Worker API](#worker-api)
-- [Market API](#market)
+- [Login](#login)
+- [Follow](#follow-api)
+- [Worker](#worker-api)
+- [Market](#market)
+- [UIA](#uia-examples)
 - [Broadcast API](#broadcast-api)
 - [Broadcast](#broadcast)
 - [Auth](#auth)
@@ -49,7 +50,7 @@ Library support 2 transport types: ws, wss for websocket and http, https for pur
 
 wss://api-golos.blckchnd.com/ws<br/>
 wss://api.aleksw.space/ws<br/>
-wss://golos.lexai.host/ws<br/><br/>
+wss://golos.lexai.host/ws<br/>
 
 https://api-golos.blckchnd.com/<br/>
 https://api.aleksw.space/<br/>
@@ -57,6 +58,9 @@ https://golos.lexai.host/<br/>
 
 ```js
 golos.config.set('websocket','wss://golos.lexai.host/ws');
+```
+or
+```js
 golos.config.set('websocket','https://golos.lexai.host/');
 ```
 
@@ -227,30 +231,6 @@ golos.api.getState(path, function(err, result) {
   console.log(err, result);
 });
 ```
-### Get Trending Categories
-```
-golos.api.getTrendingCategories(after, limit, function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Best Categories
-```
-golos.api.getBestCategories(after, limit, function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Active Categories
-```
-golos.api.getActiveCategories(after, limit, function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Recent Categories
-```
-golos.api.getRecentCategories(after, limit, function(err, result) {
-  console.log(err, result);
-});
-```
 
 ## Globals
 
@@ -272,12 +252,6 @@ golos.api.getChainProperties(function(err, result) {
   console.log(err, result);
 });
 ```
-### Get Feed History
-```
-golos.api.getFeedHistory(function(err, result) {
-  console.log(err, result);
-});
-```
 ### Get Current Median History Price
 ```
 golos.api.getCurrentMedianHistoryPrice(function(err, result) {
@@ -287,12 +261,6 @@ golos.api.getCurrentMedianHistoryPrice(function(err, result) {
 ### Get Hardfork Version
 ```
 golos.api.getHardforkVersion(function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Next Scheduled Hardfork
-```
-golos.api.getNextScheduledHardfork(function(err, result) {
   console.log(err, result);
 });
 ```
@@ -556,21 +524,9 @@ golos.api.lookupWitnessAccounts(lowerBoundName, limit, function(err, result) {
   console.log(err, result);
 });
 ```
-### Get Witness Count
-```
-golos.api.getWitnessCount(function(err, result) {
-  console.log(err, result);
-});
-```
 ### Get Active Witnesses
 ```
 golos.api.getActiveWitnesses(function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Miner Queue
-```
-golos.api.getMinerQueue(function(err, result) {
   console.log(err, result);
 });
 ```
@@ -740,12 +696,6 @@ golos.api.getOpenOrders(owner, ["GOLOS", "GBG"], function(err, result) {
   console.log(err, result);
 });
 ```
-### Get Liquidity Queue
-```
-golos.api.getLiquidityQueue(startAccount, limit, function(err, result) {
-  console.log(err, result);
-});
-```
 
 ### Limit Order Create
 ```
@@ -799,6 +749,60 @@ golos.broadcast.limitOrderCancel(wif, 'cyberfounder', orderid, function(err, res
     return;
   }
   alert('order canceled');
+});
+```
+### Fill Order
+```
+golos.broadcast.fillOrder(wif, currentOwner, currentOrderid, currentPays, openOwner, openOrderid, openPays, function(err, result) {
+  console.log(err, result);
+});
+```
+
+## UIA Examples
+
+### Asset Create
+```
+  golos.broadcast.assetCreate(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '1000.000 SUPER', true, true, "{\"image_url\":\"https://market.rudex.org/asset-symbols/rudex.golos.png\",\"description\":\"https://golos.id/\"}",
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Update
+```
+  golos.broadcast.assetUpdate(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'SUPER', ['GOLOS'], 10000, "{\"image_url\":\"https://market.rudex.org/asset-symbols/rudex.golos.png\",\"description\":\"http://golos.id/\"}",
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Issue
+```
+  golos.broadcast.assetIssue(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '1000.000 SUPER', '',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Override Transfer
+```
+  golos.broadcast.overrideTransfer(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'test', 'test2', '1.000 SUPER', 'Hello world!',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Transfer
+```
+  golos.broadcast.assetTransfer(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'SUPER', 'test',
+    [], function(err, result) {
+  console.log(err, result);
 });
 ```
 
@@ -1045,27 +1049,21 @@ golos.broadcast.escrowTransfer(wif, from, to, agent, escrowId, sbdAmount, golosA
   console.log(err, result);
 });
 ```
+### Escrow Approve
+```
+golos.broadcast.escrowApprove(wif, from, to, agent, who, escrowId, approve, function(err, result) {
+  console.log(err, result);
+});
+```
 ### Feed Publish
 ```
 golos.broadcast.feedPublish(wif, publisher, exchangeRate, function(err, result) {
   console.log(err, result);
 });
 ```
-### Pow2
-```
-golos.broadcast.pow2(wif, work, newOwnerKey, props, function(err, result) {
-  console.log(err, result);
-});
-```
 ### Fill Convert Request
 ```
 golos.broadcast.fillConvertRequest(wif, owner, requestid, amountIn, amountOut, function(err, result) {
-  console.log(err, result);
-});
-```
-### Fill Order
-```
-golos.broadcast.fillOrder(wif, currentOwner, currentOrderid, currentPays, openOwner, openOrderid, openPays, function(err, result) {
   console.log(err, result);
 });
 ```
@@ -1096,12 +1094,6 @@ golos.broadcast.recoverAccount(wif, accountToRecover, newOwnerAuthority, recentO
 ### Request Account Recovery
 ```
 golos.broadcast.requestAccountRecovery(wif, recoveryAccount, accountToRecover, newOwnerAuthority, extensions, function(err, result) {
-  console.log(err, result);
-});
-```
-### Escrow Approve
-```
-golos.broadcast.escrowApprove(wif, from, to, agent, who, escrowId, approve, function(err, result) {
   console.log(err, result);
 });
 ```
@@ -1164,18 +1156,6 @@ golos.broadcast.witnessUpdate(wif, owner, url, blockSigningKey, props, fee, func
   console.log(err, result);
 });
 ```
-### Fill Vesting Withdraw
-```
-golos.broadcast.fillVestingWithdraw(wif, fromAccount, toAccount, withdrawn, deposited, function(err, result) {
-  console.log(err, result);
-});
-```
-### Fill Order
-```
-golos.broadcast.fillOrder(wif, currentOwner, currentOrderid, currentPays, openOwner, openOrderid, openPays, function(err, result) {
-  console.log(err, result);
-});
-```
 ### Fill Transfer From Savings
 ```
 golos.broadcast.fillTransferFromSavings(wif, from, to, amount, requestId, memo, function(err, result) {
@@ -1229,54 +1209,6 @@ golos.broadcast.donate(wif, 'alice', 'bob', '1.000 GOLOS', {app: 'golos-id', ver
   golos.broadcast.inviteClaim(
     '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
     'cyberfounder', 'cyberfounder', '5JFZC7AtEe1wF2ce6vPAUxDeevzYkPgmtR14z9ZVgvCCtrFAaLw',
-    [], function(err, result) {
-  console.log(err, result);
-});
-```
-
-## UIA Examples
-
-### Asset Create
-```
-  golos.broadcast.assetCreate(
-    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
-    'cyberfounder', '1000.000 SUPER', true, true, "{\"image_url\":\"https://market.rudex.org/asset-symbols/rudex.golos.png\",\"description\":\"https://golos.id/\"}",
-    [], function(err, result) {
-  console.log(err, result);
-});
-```
-### Asset Update
-```
-  golos.broadcast.assetUpdate(
-    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
-    'cyberfounder', 'SUPER', ['GOLOS'], 10000, "{\"image_url\":\"https://market.rudex.org/asset-symbols/rudex.golos.png\",\"description\":\"http://golos.id/\"}",
-    [], function(err, result) {
-  console.log(err, result);
-});
-```
-### Asset Issue
-```
-  golos.broadcast.assetIssue(
-    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
-    'cyberfounder', '1000.000 SUPER', '',
-    [], function(err, result) {
-  console.log(err, result);
-});
-```
-### Override Transfer
-```
-  golos.broadcast.overrideTransfer(
-    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
-    'cyberfounder', 'test', 'test2', '1.000 SUPER', 'Hello world!',
-    [], function(err, result) {
-  console.log(err, result);
-});
-```
-### Asset Transfer
-```
-  golos.broadcast.assetTransfer(
-    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
-    'cyberfounder', 'SUPER', 'test',
     [], function(err, result) {
   console.log(err, result);
 });
