@@ -30,7 +30,7 @@ Library support 2 transport types: ws, wss for websocket and http, https for pur
 
 wss://api-golos.blckchnd.com/ws<br/>
 wss://api.aleksw.space/ws<br/>
-wss://golos.lexai.host/ws<br/><br/>
+wss://golos.lexai.host/ws<br/>
 
 https://api-golos.blckchnd.com/<br/>
 https://api.aleksw.space/<br/>
@@ -38,6 +38,9 @@ https://golos.lexai.host/<br/>
 
 ```js
 golos.config.set('websocket','wss://golos.lexai.host/ws');
+```
+or
+```js
 golos.config.set('websocket','https://golos.lexai.host/');
 ```
 

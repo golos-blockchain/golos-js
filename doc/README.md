@@ -1,23 +1,21 @@
 # Documentation
 
-- [Install](#install)
-- [Browser](#browser)
-- [Config](#config)
-- [Database API](#api)
+- [Database](#api)
     - [Subscriptions](#subscriptions)
     - [Tags](#tags)
     - [Blocks and transactions](#blocks-and-transactions)
     - [Globals](#globals)
     - [Keys](#keys)
     - [Accounts](#accounts)
-    - [Market](#market)
     - [Authority / validation](#authority--validation)
     - [Votes](#votes)
     - [Content](#content)
     - [Witnesses](#witnesses)
-- [Login API](#login)
-- [Follow API](#follow-api)
-- [Worker API](#worker-api)
+- [Login](#login)
+- [Follow](#follow-api)
+- [Worker](#worker-api)
+- [Market](#market)
+- [UIA](#uia-examples)
 - [Broadcast API](#broadcast-api)
 - [Broadcast](#broadcast)
 - [Auth](#auth)
@@ -35,6 +33,8 @@ $ npm install git+https://github.com/golos-blockchain/golos-js.git --save
 ```
 
 # Browser 
+Online library minify js available in [jsDelivr CND](https://cdn.jsdelivr.net/npm/golos-classic-js@latest/dist/golos.min.js) and [Unpkg CDN](https://unpkg.com/golos-classic-js@latest/dist/golos.min.js).
+
 ```html 
 <script src="./golos.min.js"></script>
 <script>
@@ -44,21 +44,24 @@ golos.api.getAccounts(['ned', 'dan'], function(err, response){
 </script>
 ```
 
-## Config
-Default config should work with golos. however you can change it to work with golos
-as 
+## WebSockets and HTTP transport
+
+Library support 2 transport types: ws, wss for websocket and http, https for pure HTTP JSONRPC.
+
+wss://api-golos.blckchnd.com/ws<br/>
+wss://api.aleksw.space/ws<br/>
+wss://golos.lexai.host/ws<br/>
+
+https://api-golos.blckchnd.com/<br/>
+https://api.aleksw.space/<br/>
+https://golos.lexai.host/<br/>
+
 ```js
-golos.config.set('websocket','wss://api-full.golos.id/ws');
-golos.config.set('address_prefix','GLS');
-golos.config.set('chain_id','782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12');
+golos.config.set('websocket','wss://golos.lexai.host/ws');
 ```
-### set
-```
-golos.config.set('address_prefix','GLS');
-```
-### get
-```
-golos.config.get('chain_id');
+or
+```js
+golos.config.set('websocket','https://golos.lexai.host/');
 ```
 
 # API
@@ -228,30 +231,6 @@ golos.api.getState(path, function(err, result) {
   console.log(err, result);
 });
 ```
-### Get Trending Categories
-```
-golos.api.getTrendingCategories(after, limit, function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Best Categories
-```
-golos.api.getBestCategories(after, limit, function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Active Categories
-```
-golos.api.getActiveCategories(after, limit, function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Recent Categories
-```
-golos.api.getRecentCategories(after, limit, function(err, result) {
-  console.log(err, result);
-});
-```
 
 ## Globals
 
@@ -273,12 +252,6 @@ golos.api.getChainProperties(function(err, result) {
   console.log(err, result);
 });
 ```
-### Get Feed History
-```
-golos.api.getFeedHistory(function(err, result) {
-  console.log(err, result);
-});
-```
 ### Get Current Median History Price
 ```
 golos.api.getCurrentMedianHistoryPrice(function(err, result) {
@@ -288,12 +261,6 @@ golos.api.getCurrentMedianHistoryPrice(function(err, result) {
 ### Get Hardfork Version
 ```
 golos.api.getHardforkVersion(function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Next Scheduled Hardfork
-```
-golos.api.getNextScheduledHardfork(function(err, result) {
   console.log(err, result);
 });
 ```
@@ -408,43 +375,6 @@ golos.api.getOwnerHistory(account, function(err, result) {
 ### Get Recovery Request
 ```
 golos.api.getRecoveryRequest(account, function(err, result) {
-  console.log(err, result);
-});
-```
-
-## Market
-
-### Get Ticker
-```js
-/**
- * getTicker() receive statistic values of the internal GBG:GOLOS market for the last 24 hours
- * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
-*/
-golos.api.getTicker(["GOLOS", "GBG"], function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Order Book
-```js
-/**
- * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
-*/
-golos.api.getOrderBook(limit, ["GOLOS", "GBG"], function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Open Orders
-```js
-/**
- * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
-*/
-golos.api.getOpenOrders(owner, ["GOLOS", "GBG"], function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Liquidity Queue
-```
-golos.api.getLiquidityQueue(startAccount, limit, function(err, result) {
   console.log(err, result);
 });
 ```
@@ -594,21 +524,9 @@ golos.api.lookupWitnessAccounts(lowerBoundName, limit, function(err, result) {
   console.log(err, result);
 });
 ```
-### Get Witness Count
-```
-golos.api.getWitnessCount(function(err, result) {
-  console.log(err, result);
-});
-```
 ### Get Active Witnesses
 ```
 golos.api.getActiveWitnesses(function(err, result) {
-  console.log(err, result);
-});
-```
-### Get Miner Queue
-```
-golos.api.getMinerQueue(function(err, result) {
   console.log(err, result);
 });
 ```
@@ -744,6 +662,146 @@ golos.api.getWorkerRequests(query, sort, fillPosts, function(err, result) {
 ### Get Worker Request Votes
 ```
 golos.api.getWorkerRequestVotes(author, permlink, startVoter, limit, function(err, result) {
+  console.log(err, result);
+});
+```
+
+## Market
+
+### Get Ticker
+```js
+/**
+ * getTicker() receive statistic values of the internal GBG:GOLOS market for the last 24 hours
+ * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
+*/
+golos.api.getTicker(["GOLOS", "GBG"], function(err, result) {
+  console.log(err, result);
+});
+```
+### Get Order Book
+```js
+/**
+ * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
+*/
+golos.api.getOrderBook(limit, ["GOLOS", "GBG"], function(err, result) {
+  console.log(err, result);
+});
+```
+### Get Open Orders
+```js
+/**
+ * Market pair is optional. If omitted - will be equal to ["GOLOS", "GBG"].
+*/
+golos.api.getOpenOrders(owner, ["GOLOS", "GBG"], function(err, result) {
+  console.log(err, result);
+});
+```
+
+### Limit Order Create
+```
+golos.broadcast.limitOrderCreate(wif, owner, orderid, amountToSell, minToReceive, fillOrKill, expiration, function(err, result) {
+  console.log(err, result);
+});
+```
+#### Example:
+```js
+let wif = '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS'; // active private key
+
+let orderid = Math.floor(Date.now() / 1000); // it is golos.id way and it is preferred
+
+let expiration = new Date();
+expiration.setHours(expiration.getHours() + 1);
+expiration = expiration.toISOString().substr(0, 19); // i.e. 2020-09-07T11:33:00
+
+golos.broadcast.limitOrderCreate(wif, 'cyberfounder', orderid, '1000.000000 AAA', '1000.000 BBB', false, expiration, function(err, res) {
+  if (err) {
+    console.log(err);
+    alert(err);
+    return;
+  }
+  alert('order created');
+});
+```
+Hint: to detect what order is filled you can:  
+a) create order with fillOrKill = true, which will fail order creation if not filled instantly,  
+b) or use callbacks to wait until order is filled,  
+c) or repeative call `getAccountHistory` to wait until order is filled: 
+```js
+// 1st argument is owner of one of two orders in pair
+golos.api.getAccountHistory('cyberfounder', -1, 1000, {select_ops: [ 'fill_order']}, function(err, result) {
+  // repeat call if still not filled
+});
+```
+### Limit Order Cancel
+```
+golos.broadcast.limitOrderCancel(wif, owner, orderid, function(err, result) {
+  console.log(err, result);
+});
+```
+#### Example:
+```js
+let wif = '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS'; // active private key
+
+golos.broadcast.limitOrderCancel(wif, 'cyberfounder', orderid, function(err, res) {
+  if (err) {
+    console.log(err);
+    alert(err);
+    return;
+  }
+  alert('order canceled');
+});
+```
+### Fill Order
+```
+golos.broadcast.fillOrder(wif, currentOwner, currentOrderid, currentPays, openOwner, openOrderid, openPays, function(err, result) {
+  console.log(err, result);
+});
+```
+
+## UIA Examples
+
+### Asset Create
+```
+  golos.broadcast.assetCreate(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '1000.000 SUPER', true, true, "{\"image_url\":\"https://market.rudex.org/asset-symbols/rudex.golos.png\",\"description\":\"https://golos.id/\"}",
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Update
+```
+  golos.broadcast.assetUpdate(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'SUPER', ['GOLOS'], 10000, "{\"image_url\":\"https://market.rudex.org/asset-symbols/rudex.golos.png\",\"description\":\"http://golos.id/\"}",
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Issue
+```
+  golos.broadcast.assetIssue(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', '1000.000 SUPER', '',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Override Transfer
+```
+  golos.broadcast.overrideTransfer(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'test', 'test2', '1.000 SUPER', 'Hello world!',
+    [], function(err, result) {
+  console.log(err, result);
+});
+```
+### Asset Transfer
+```
+  golos.broadcast.assetTransfer(
+    '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS',
+    'cyberfounder', 'SUPER', 'test',
+    [], function(err, result) {
   console.log(err, result);
 });
 ```
@@ -991,27 +1049,21 @@ golos.broadcast.escrowTransfer(wif, from, to, agent, escrowId, sbdAmount, golosA
   console.log(err, result);
 });
 ```
+### Escrow Approve
+```
+golos.broadcast.escrowApprove(wif, from, to, agent, who, escrowId, approve, function(err, result) {
+  console.log(err, result);
+});
+```
 ### Feed Publish
 ```
 golos.broadcast.feedPublish(wif, publisher, exchangeRate, function(err, result) {
   console.log(err, result);
 });
 ```
-### Pow2
-```
-golos.broadcast.pow2(wif, work, newOwnerKey, props, function(err, result) {
-  console.log(err, result);
-});
-```
 ### Fill Convert Request
 ```
 golos.broadcast.fillConvertRequest(wif, owner, requestid, amountIn, amountOut, function(err, result) {
-  console.log(err, result);
-});
-```
-### Fill Order
-```
-golos.broadcast.fillOrder(wif, currentOwner, currentOrderid, currentPays, openOwner, openOrderid, openPays, function(err, result) {
   console.log(err, result);
 });
 ```
@@ -1024,78 +1076,6 @@ golos.broadcast.fillVestingWithdraw(wif, fromAccount, toAccount, withdrawn, depo
 ### Interest
 ```
 golos.broadcast.interest(wif, owner, interest, function(err, result) {
-  console.log(err, result);
-});
-```
-### Limit Order Cancel
-```
-golos.broadcast.limitOrderCancel(wif, owner, orderid, function(err, result) {
-  console.log(err, result);
-});
-```
-#### Example:
-```js
-let wif = '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS'; // active private key
-
-golos.broadcast.limitOrderCancel(wif, 'cyberfounder', orderid, function(err, res) {
-  if (err) {
-    console.log(err);
-    alert(err);
-    return;
-  }
-  alert('order canceled');
-});
-```
-### Limit Order Create
-```
-golos.broadcast.limitOrderCreate(wif, owner, orderid, amountToSell, minToReceive, fillOrKill, expiration, function(err, result) {
-  console.log(err, result);
-});
-```
-#### Example:
-```js
-let wif = '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS'; // active private key
-
-let orderid = Math.floor(Date.now() / 1000); // it is golos.id way and it is preferred
-
-let expiration = new Date();
-expiration.setHours(expiration.getHours() + 1);
-expiration = expiration.toISOString().substr(0, 19); // i.e. 2020-09-07T11:33:00
-
-golos.broadcast.limitOrderCreate(wif, 'cyberfounder', orderid, '1000.000000 AAA', '1000.000 BBB', false, expiration, function(err, res) {
-  if (err) {
-    console.log(err);
-    alert(err);
-    return;
-  }
-  alert('order created');
-});
-```
-Hint: to detect what order is filled you can:  
-a) create order with fillOrKill = true, which will fail order creation if not filled instantly,  
-b) or use callbacks to wait until order is filled,  
-c) or repeative call `getAccountHistory` to wait until order is filled: 
-```js
-// 1st argument is owner of one of two orders in pair
-golos.api.getAccountHistory('cyberfounder', -1, 1000, {select_ops: [ 'fill_order']}, function(err, result) {
-  // repeat call if still not filled
-});
-```
-### Limit Order Create2
-```
-golos.broadcast.limitOrderCreate2(wif, owner, orderid, amountToSell, exchangeRate, fillOrKill, expiration, function(err, result) {
-  console.log(err, result);
-});
-```
-### Liquidity Reward
-```
-golos.broadcast.liquidityReward(wif, owner, payout, function(err, result) {
-  console.log(err, result);
-});
-```
-### Pow
-```
-golos.broadcast.pow(wif, worker, input, signature, work, function(err, result) {
   console.log(err, result);
 });
 ```
@@ -1114,12 +1094,6 @@ golos.broadcast.recoverAccount(wif, accountToRecover, newOwnerAuthority, recentO
 ### Request Account Recovery
 ```
 golos.broadcast.requestAccountRecovery(wif, recoveryAccount, accountToRecover, newOwnerAuthority, extensions, function(err, result) {
-  console.log(err, result);
-});
-```
-### Escrow Approve
-```
-golos.broadcast.escrowApprove(wif, from, to, agent, who, escrowId, approve, function(err, result) {
   console.log(err, result);
 });
 ```
@@ -1179,18 +1153,6 @@ golos.broadcast.withdrawVesting(wif, account, vestingShares, function(err, resul
 ### Witness Update
 ```
 golos.broadcast.witnessUpdate(wif, owner, url, blockSigningKey, props, fee, function(err, result) {
-  console.log(err, result);
-});
-```
-### Fill Vesting Withdraw
-```
-golos.broadcast.fillVestingWithdraw(wif, fromAccount, toAccount, withdrawn, deposited, function(err, result) {
-  console.log(err, result);
-});
-```
-### Fill Order
-```
-golos.broadcast.fillOrder(wif, currentOwner, currentOrderid, currentPays, openOwner, openOrderid, openPays, function(err, result) {
   console.log(err, result);
 });
 ```
@@ -1300,20 +1262,6 @@ golos.broadcast.donate(wif, 'alice', 'bob', '1.000 GOLOS', {app: 'golos-id', ver
 });
 ```
 
-### Donate
-```
-golos.broadcast.donate(wif, 'alice', 'bob', '1.000 GOLOS', {app: 'golos-id', version: 1, comment: 'Hello', target: {author: 'bob', permlink: 'test'}}, [], function(err, result) {
-  console.log(err, result);
-});
-```
-
-### Donate
-```
-golos.broadcast.donate(wif, 'alice', 'bob', '1.000 GOLOS', {app: 'golos-id', version: 1, comment: 'Hello', target: {author: 'bob', permlink: 'test'}}, [], function(err, result) {
-  console.log(err, result);
-});
-```
-
 # Auth
 
 ### Verify
@@ -1371,6 +1319,19 @@ golos.auth.isWif(privWif);
 var privWif = '5J...';
 var resultIsWif = golos.auth.isWif(privWif);
 console.log('isWif', resultIsWif);
+```
+
+### Get Wif From Password Or Wif (Login Form Vaildation)
+```
+golos.auth.getWif(name, privWifOrPassword, role = 'posting');
+```
+This method is recommended to implement login forms in dApps on Golos Blockhain. Call it on entered login and password. If it is master password, it converts it to wif (with `toWif`) and returns it. If it is wif, it returns it without changes. Otherwise, if password format is wrong, it returns null. So if not null, you should compare it woth account's public key (can be got from `getAccounts`) using `wifIsValid`, and if true, authorize the user.
+#### Example:
+```js
+var name = 'alice';
+var privWifOrPassword = '5J...'; // or 'P5J...'
+var privWifPosting = golos.auth.getWif(name, privWifOrPassword);
+console.log('getWif', privWifPosting);
 ```
 
 ### To Wif

@@ -44,7 +44,7 @@ export function jsonRpc(uri, {method, id, params}) {
     if (rpcRes.error) {
       throw new RPCError(rpcRes.error);
     }
-    return rpcRes.result
+    return rpcRes;
   });
 }
 
@@ -53,13 +53,24 @@ export default class HttpTransport extends Transport {
     super(Object.assign({id: 0}, options));
 
     this.currentP = Promise.fulfilled();
+    this._requests = new Map();
   }
 
   send(api, data, callback) {
   	const id = data.id || this.id++;
-    const params = [api, data.method, data.params];
-    const url = config.get("websocket");
-    jsonRpc(url, {method: 'call', id, params})
-      .then(res => { callback(null, res) }, err => { callback(err) })
+
+    this.currentP = new Promise((resolve, reject) => {
+      this._requests[id] = {id, resolve, reject};
+      const params = [api, data.method, data.params];
+      const url = config.get("websocket");
+      jsonRpc(url, {method: 'call', id, params})
+        .then(res => {
+          this._requests[res.id].resolve(res.result)
+        }, err => {
+          this._requests[res.id].reject(err)
+        })
+      })
+      .nodeify(callback);
+    return this.currentP;
   }
 }

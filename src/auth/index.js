@@ -76,6 +76,25 @@ Auth.isWif = function (privWif) {
 	return isWif;
 };
 
+Auth.getWif = function (name, privWifOrPassword, role = 'posting') {
+	let wif = privWifOrPassword;
+	try {
+		if (/^P/.test(wif)) { // password
+			const passWif = wif.substring(1);
+			if (!/^5[HJK].{45,}/i.test(passWif) || !this.isWif(passWif)) { // 51 is the wif length
+				wif = null;
+			} else {
+				wif = this.toWif(name, wif, role);
+			}
+		} else {
+			if (!/^5[HJK].{45,}/i.test(wif) || !this.isWif(wif)) { // 51 is the wif length
+				wif = null;
+			}
+		}
+	} catch (e) { }
+	return wif;
+};
+
 Auth.toWif = function (name, password, role) {
 	var seed = name + role + password;
 	var brainKey = seed.trim().split(/[\t\n\v\f\r ]+/).join(' ');
