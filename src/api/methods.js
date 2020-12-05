@@ -171,6 +171,19 @@ module.exports = [
   },
   {
     "api": "social_network",
+    "method": "get_all_discussions_by_active",
+    "has_default_values": true,
+    "params": [
+      "startAuthor",
+      "startPermlink",
+      "limit",
+      `category=${EMPTY_STRING}`,
+      `voteLimit=${DEFAULT_VOTES_LIMIT}`,
+      `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+    ]
+  },
+  {
+    "api": "social_network",
     "method": "get_content",
     "has_default_values": true,
     "params": [
