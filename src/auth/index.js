@@ -6,13 +6,15 @@ var bigi = require('bigi'),
 	config = require('../config'),
 	operations = require('./serializer/src/operations'),
 	Signature = require('./ecc/src/signature'),
-	KeyPrivate = require('./ecc/src/key_private'),
+	PrivateKey = require('./ecc/src/key_private'),
 	PublicKey = require('./ecc/src/key_public'),
+	api = require('../api'),
   hash = require('./ecc/src/hash');
 
 var Auth = {};
 var transaction = operations.transaction;
 var signed_transaction = operations.signed_transaction;
+import Promise from 'bluebird';
 
 Auth.verify = function (name, password, auths) {
 	var hasKey = false;
@@ -76,24 +78,49 @@ Auth.isWif = function (privWif) {
 	return isWif;
 };
 
-Auth.getWif = function (name, privWifOrPassword, role = 'posting') {
-	let wif = privWifOrPassword;
+Auth.loginAsync = function (name, password, callback) {
 	try {
-		if (/^P/.test(wif)) { // password
-			const passWif = wif.substring(1);
-			if (!/^5[HJK].{45,}/i.test(passWif) || !this.isWif(passWif)) { // 51 is the wif length
-				wif = null;
-			} else {
-				wif = this.toWif(name, wif, role);
-			}
-		} else {
-			if (!/^5[HJK].{45,}/i.test(wif) || !this.isWif(wif)) { // 51 is the wif length
-				wif = null;
-			}
+		let result = {owner: null, active: null, posting: null, memo: null, password: null}
+		const roles = Object.keys(result).slice(0, 4);
+		let privateKeys = {};
+		let isPass = false;
+		try {
+			const pk = PrivateKey.fromWif(password);
+			roles.map(role =>
+				privateKeys[role] = pk.toString()
+			);
+		} catch (err) {
+			isPass = true;
+			roles.map(role =>
+				privateKeys[role] = PrivateKey.fromSeed(`${name}${role}${password}`).toString()
+			);
 		}
-	} catch (e) { }
-	return wif;
+		api.getAccountsAsync([name], (err, res) => {
+			if (err) {
+				callback(err, null);
+				return;
+			}
+			if (res.length == 0) {
+				callback('No such account', null);
+				return;
+			}
+			roles.slice(0, 3).map(role => {
+				let key_auths = res[0][role].key_auths;
+				for (let i = 0; i < key_auths.length; i++) {
+				  if (this.wifIsValid(privateKeys[role], key_auths[i][0])) {
+					result[role] = privateKeys[role];
+					break;
+				  }
+				}
+			});
+			if (this.wifIsValid(privateKeys.memo, res[0].memo_key)) result.memo = privateKeys.memo;
+			if (isPass && result.posting) result.password = password;
+			callback(null, result)
+		});
+	} catch (err) { callback(err, null); }
 };
+
+Auth.login = Promise.promisify(Auth.loginAsync);
 
 Auth.toWif = function (name, password, role) {
 	var seed = name + role + password;
@@ -112,7 +139,7 @@ Auth.wifIsValid = function (privWif, pubWif) {
 };
 
 Auth.wifToPublic = function (privWif) {
-	var pubWif = KeyPrivate.fromWif(privWif);
+	var pubWif = PrivateKey.fromWif(privWif);
 	pubWif = pubWif.toPublic().toString();
 	return pubWif;
 };

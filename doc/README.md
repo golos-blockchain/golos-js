@@ -1273,17 +1273,28 @@ var resultIsWif = golos.auth.isWif(privWif);
 console.log('isWif', resultIsWif);
 ```
 
-### Get Wif From Password Or Wif (Login Form Vaildation)
+### Login Form Validation
 ```
-golos.auth.getWif(name, privWifOrPassword, role = 'posting');
+golos.auth.login(name, privWifOrPassword, callback);
 ```
-This method is recommended to implement login forms in dApps on Golos Blockhain. Call it on entered login and password. If it is master password, it converts it to wif (with `toWif`) and returns it. If it is wif, it returns it without changes. Otherwise, if password format is wrong, it returns null. So if not null, you should compare it woth account's public key (can be got from `getAccounts`) using `wifIsValid`, and if true, authorize the user.
+Recommended for usage in login forms in dApps on Golos Blockchain.
+Obtains specified account (using `getAccounts` API), compares each of account keys with specified string, and returns object with WIFs (private keys) which this string provides and which should be used to authorize operations. Object has fields: `active`, `posting`, `owner`, and `memo`. Each field is `true` if string provides this role, or `false` otherwise. Also, it has field `password`. If provided string is a password (not key) and this password provides `posting` role, field `password` has password's value.
 #### Example:
 ```js
 var name = 'alice';
 var privWifOrPassword = '5J...'; // or 'P5J...'
-var privWifPosting = golos.auth.getWif(name, privWifOrPassword);
-console.log('getWif', privWifPosting);
+golos.auth.login(name, privWifOrPassword, function(err, response) {
+  console.log(response); // Object { owner: '5J...', active: null, posting: '5J...', memo: '5J...' }
+  if (response.active && !response.password) {
+    console.log('Login failed! It is not recommended to authorize users with active key (or key which can be used as active), except case if it is also the password!');
+    return;
+  }
+  if (!response.posting) {
+    console.log('Login failed! Incorrect password');
+    return;
+  }
+  console.log('Login OK! To authorize most of operations, use following WIF: ' + response.posting)
+});
 ```
 
 ### To Wif
