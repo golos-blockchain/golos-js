@@ -80,6 +80,11 @@ module.exports = [
   },
   {
     "api": "tags",
+    "method": "get_tags",
+    "params": ["tags"]
+  },
+  {
+    "api": "tags",
     "method": "get_tags_used_by_author",
     "params": ["author"]
   },
