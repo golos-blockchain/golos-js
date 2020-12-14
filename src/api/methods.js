@@ -576,7 +576,8 @@ module.exports = [
   },
   {
     "api": "account_notes",
-    "method": "get_value",
-    "params": ["account", "key"]
+    "method": "get_values",
+    "has_default_values": true,
+    "params": [`account`, `keys=${EMPTY_ARRAY}`]
   },
 ]
