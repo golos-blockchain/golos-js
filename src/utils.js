@@ -5,6 +5,65 @@ export function camelCase(str) {
   });
 }
 
+class _Asset {
+  constructor(amount, precision, symbol) {
+    if (precision && symbol) {
+      this._amount = amount;
+      this._precision = precision;
+      this._symbol = symbol;
+      return;
+    }
+    const str = amount;
+    const asset_parts = str.split(' ');
+    this._precision = asset_parts[0].split('.')[1].length;
+    this._amount = parseFloat(asset_parts[0]) * Math.pow(10, this._precision);
+    this._symbol = asset_parts[1];
+  }
+
+  get amount() {
+    return this._amount;
+  }
+
+  set amount(value) {
+    this._amount = value;
+  }
+
+  get amountFloat() {
+    return this._amount / Math.pow(10, this._precision);
+  }
+
+  set amountFloat(value) {
+    this._amount = value * Math.pow(10, this._precision);
+  }
+
+  get precision() {
+    return this._precision;
+  }
+
+  set precision(value) {
+    this._precision = value;
+  }
+
+  get symbol() {
+    return this._symbol;
+  }
+
+  set symbol(value) {
+    this._symbol = value;
+  }
+
+  get isUIA() {
+    return this._symbol != 'GOLOS' && this._symbol != 'GBG' && this._symbol != 'GESTS';
+  }
+
+  toString(decPlaces = undefined) {
+    return this.amountFloat.toFixed(decPlaces !== undefined ? decPlaces : this._precision) + ' ' + this._symbol;
+  }
+}
+export function Asset(...args) {
+  return new _Asset(...args);
+}
+
 export function validateAccountName(value) {
   let i, label, len, suffix;
 
