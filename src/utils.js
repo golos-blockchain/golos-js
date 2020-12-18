@@ -5,6 +5,15 @@ export function camelCase(str) {
   });
 }
 
+function toFixedTrunc(x, n) {
+  const v = (typeof x === 'string' ? x : x.toString()).split('.');
+  if (n <= 0) return v[0];
+  let f = v[1] || '';
+  if (f.length > n) return `${v[0]}.${f.substr(0,n)}`;
+  while (f.length < n) f += '0';
+  return `${v[0]}.${f}`
+}
+
 class _Asset {
   constructor(amount, precision, symbol) {
     if (precision && symbol) {
@@ -57,7 +66,7 @@ class _Asset {
   }
 
   toString(decPlaces = undefined) {
-    return this.amountFloat.toFixed(decPlaces !== undefined ? decPlaces : this._precision) + ' ' + this._symbol;
+    return toFixedTrunc(this.amountFloat, decPlaces !== undefined ? decPlaces : this._precision) + ' ' + this._symbol;
   }
 }
 export function Asset(...args) {
@@ -66,18 +75,28 @@ export function Asset(...args) {
 
 export function validateAccountName(value) {
   let i, label, len, suffix;
+  let res = {error: null, msg: ''};
 
   suffix = "Account name should ";
+
   if (!value) {
-    return suffix + "not be empty.";
+    res.msg = suffix + "not be empty.";
+    res.error = 'account_name_should_not_be_empty';
+    return res;
   }
+
   const length = value.length;
   if (length < 3) {
-    return suffix + "be longer.";
+    res.msg = suffix + "be longer.";
+    res.error = 'account_name_should_be_longer';
+    return res;
   }
   if (length > 16) {
-    return suffix + "be shorter.";
+    res.msg = suffix + "be shorter.";
+    res.error = 'account_name_should_be_shorter';
+    return res;
   }
+
   if (/\./.test(value)) {
     suffix = "Each account segment should ";
   }
@@ -85,20 +104,31 @@ export function validateAccountName(value) {
   for (i = 0, len = ref.length; i < len; i++) {
     label = ref[i];
     if (!/^[a-z]/.test(label)) {
-      return suffix + "start with a letter.";
+      res.msg = suffix + "start with a letter.";
+      res.error = 'each_account_segment_should_start_with_a_letter';
+      return res;
     }
     if (!/^[a-z0-9-]*$/.test(label)) {
-      return suffix + "have only letters, digits, or dashes.";
+      res.msg = suffix + "have only letters, digits, or dashes.";
+      res.error = 'each_account_segment_should_have_only_letters_digits_or_dashes';
+      return res;
     }
     if (/--/.test(label)) {
-      return suffix + "have only one dash in a row.";
+      res.msg = suffix + "have only one dash in a row.";
+      res.error = 'each_account_segment_should_have_only_one_dash_in_a_row';
+      return res;
     }
     if (!/[a-z0-9]$/.test(label)) {
-      return suffix + "end with a letter or digit.";
+      res.msg = suffix + "end with a letter or digit.";
+      res.error = 'each_account_segment_should_end_with_a_letter_or_digit';
+      return res;
     }
     if (!(label.length >= 3)) {
-      return suffix + "be longer";
+      res.msg = suffix + "be longer";
+      res.error = 'each_account_segment_should_be_longer';
+      return res;
     }
   }
-  return null;
+
+  return res;
 }
