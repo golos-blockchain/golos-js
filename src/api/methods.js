@@ -4,6 +4,7 @@ const DEFAULT_VOTES_LIMIT = 10000;
 const DEFAULT_VOTES_OFFSET = 0;
 const DEFAULT_MARKET_PAIR = '["GOLOS", "GBG"]';
 const DEFAULT_ASSETS_LIMIT = 20;
+const DEFAULT_BLOG_FEED_LIMIT = 500;
 const EMPTY_STRING = '';
 const EMPTY_ARRAY = '[]';
 
@@ -172,6 +173,7 @@ module.exports = [
       "limit",
       `voteLimit=${DEFAULT_VOTES_LIMIT}`,
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+      `filterTagMasks=${EMPTY_ARRAY}`,
     ]
   },
   {
@@ -185,6 +187,8 @@ module.exports = [
       `category=${EMPTY_STRING}`,
       `voteLimit=${DEFAULT_VOTES_LIMIT}`,
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+      `filterIds=${EMPTY_ARRAY}`,
+      `filterAuthors=${EMPTY_ARRAY}`,
     ]
   },
   {
@@ -207,6 +211,8 @@ module.exports = [
       "parentPermlink",
       `voteLimit=${DEFAULT_VOTES_LIMIT}`,
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+      `filterIds=${EMPTY_ARRAY}`,
+      `filterAuthors=${EMPTY_ARRAY}`,
     ]
   },
   {
@@ -218,6 +224,8 @@ module.exports = [
       "parentPermlink",
       `voteLimit=${DEFAULT_VOTES_LIMIT}`,
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+      `filterIds=${EMPTY_ARRAY}`,
+      `filterAuthors=${EMPTY_ARRAY}`,
     ]
   },
   {
@@ -408,22 +416,46 @@ module.exports = [
   {
     "api": "follow",
     "method": "get_feed_entries",
-    "params": ["account", "entryId", "limit"]
+    "has_default_values": true,
+    "params": [
+      "account",
+      "entryId=0",
+      `limit=${DEFAULT_BLOG_FEED_LIMIT}`,
+      `filterTagMasks=${EMPTY_ARRAY}`,
+    ]
   },
   {
     "api": "follow",
     "method": "get_feed",
-    "params": ["account", "entryId", "limit"]
+    "has_default_values": true,
+    "params": [
+      "account",
+      "entryId=0",
+      `limit=${DEFAULT_BLOG_FEED_LIMIT}`,
+      `filterTagMasks=${EMPTY_ARRAY}`,
+    ]
   },
   {
     "api": "follow",
     "method": "get_blog_entries",
-    "params": ["account", "entryId", "limit"]
+    "has_default_values": true,
+    "params": [
+      "account",
+      "entryId=0",
+      `limit=${DEFAULT_BLOG_FEED_LIMIT}`,
+      `filterTagMasks=${EMPTY_ARRAY}`,
+    ]
   },
   {
     "api": "follow",
     "method": "get_blog",
-    "params": ["account", "entryId", "limit"]
+    "has_default_values": true,
+    "params": [
+      "account",
+      "entryId=0",
+      `limit=${DEFAULT_BLOG_FEED_LIMIT}`,
+      `filterTagMasks=${EMPTY_ARRAY}`,
+    ]
   },
   {
     "api": "follow",
