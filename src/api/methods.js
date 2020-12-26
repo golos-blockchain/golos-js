@@ -183,7 +183,8 @@ module.exports = [
     "params": [
       "startAuthor",
       "startPermlink",
-      "limit",
+      "from=0",
+      "limit=20",
       `category=${EMPTY_STRING}`,
       `voteLimit=${DEFAULT_VOTES_LIMIT}`,
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
