@@ -232,6 +232,19 @@ module.exports = [
   },
   {
     "api": "social_network",
+    "method": "get_last_reply",
+    "has_default_values": true,
+    "params": [
+      "author",
+      "permlink",
+      `voteLimit=${DEFAULT_VOTES_LIMIT}`,
+      `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+      `filterIds=${EMPTY_ARRAY}`,
+      `filterAuthors=${EMPTY_ARRAY}`,
+    ]
+  },
+  {
+    "api": "social_network",
     "method": "get_active_votes",
     "has_default_values": true,
     "params": [
