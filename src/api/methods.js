@@ -185,7 +185,7 @@ module.exports = [
       "startPermlink",
       "from=0",
       "limit=20",
-      `category=${EMPTY_STRING}`,
+      `categories=${EMPTY_ARRAY}`,
       `voteLimit=${DEFAULT_VOTES_LIMIT}`,
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
       `filterIds=${EMPTY_ARRAY}`,
