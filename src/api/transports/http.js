@@ -14,11 +14,12 @@ const debugProtocol = newDebug('golos:protocol');
 const debugHttp = newDebug('golos:http');
 
 class RPCError extends Error {
-  constructor(rpcError) {
+  constructor(rpcError, rpcRes) {
     super(rpcError.message);
     this.name = 'RPCError';
     this.code = rpcError.code;
     this.data = rpcError.data;
+    this.resid = rpcRes.id;
   }
 }
 
@@ -42,7 +43,7 @@ export function jsonRpc(uri, {method, id, params}) {
       throw new Error(`Invalid response id: ${ rpcRes.id }`);
     }
     if (rpcRes.error) {
-      throw new RPCError(rpcRes.error);
+      throw new RPCError(rpcRes.error, rpcRes);
     }
     return rpcRes;
   });
@@ -67,7 +68,7 @@ export default class HttpTransport extends Transport {
         .then(res => {
           this._requests[res.id].resolve(res.result)
         }, err => {
-          this._requests[res.id].reject(err)
+          this._requests[err.resid].reject(err)
         })
       })
       .nodeify(callback);
