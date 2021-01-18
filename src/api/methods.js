@@ -7,6 +7,7 @@ const DEFAULT_ASSETS_LIMIT = 20;
 const DEFAULT_BLOG_FEED_LIMIT = 500;
 const EMPTY_STRING = '';
 const EMPTY_ARRAY = '[]';
+const EMPTY_OPTIONAL = null;
 
 module.exports = [
   {
@@ -227,6 +228,7 @@ module.exports = [
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
       `filterIds=${EMPTY_ARRAY}`,
       `filterAuthors=${EMPTY_ARRAY}`,
+      `sortByCreatedDesc=${EMPTY_OPTIONAL}`, // use strings: 'true', 'false'. Non-string false is null
     ]
   },
   {
