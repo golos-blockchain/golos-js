@@ -215,6 +215,7 @@ module.exports = [
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
       `filterIds=${EMPTY_ARRAY}`,
       `filterAuthors=${EMPTY_ARRAY}`,
+      `filterNegativeRepAuthors=false`,
     ]
   },
   {
@@ -228,6 +229,7 @@ module.exports = [
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
       `filterIds=${EMPTY_ARRAY}`,
       `filterAuthors=${EMPTY_ARRAY}`,
+      `filterNegativeRepAuthors=false`,
       `sortByCreatedDesc=${EMPTY_OPTIONAL}`, // use strings: 'true', 'false'. Non-string false is null
     ]
   },
