@@ -268,6 +268,11 @@ module.exports = [
     "params": ["uia", "target", "from", "to", "limit", "offset", "join_froms"]
   },
   {
+    "api": "social_network",
+    "method": "get_donates_for_targets",
+    "params": ["targets", "limit", "offset", "join_froms"]
+  },
+  {
     "api": "database_api",
     "method": "get_block_header",
     "params": ["blockNum"]
