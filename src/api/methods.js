@@ -4,8 +4,10 @@ const DEFAULT_VOTES_LIMIT = 10000;
 const DEFAULT_VOTES_OFFSET = 0;
 const DEFAULT_MARKET_PAIR = '["GOLOS", "GBG"]';
 const DEFAULT_ASSETS_LIMIT = 20;
+const DEFAULT_BLOG_FEED_LIMIT = 500;
 const EMPTY_STRING = '';
 const EMPTY_ARRAY = '[]';
+const EMPTY_OPTIONAL = null;
 
 module.exports = [
   {
@@ -77,6 +79,11 @@ module.exports = [
     "api": "tags",
     "method": "get_trending_tags",
     "params": ["afterTag", "limit"]
+  },
+  {
+    "api": "tags",
+    "method": "get_tags",
+    "params": ["tags"]
   },
   {
     "api": "tags",
@@ -167,6 +174,23 @@ module.exports = [
       "limit",
       `voteLimit=${DEFAULT_VOTES_LIMIT}`,
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+      `filterTagMasks=${EMPTY_ARRAY}`,
+    ]
+  },
+  {
+    "api": "social_network",
+    "method": "get_all_discussions_by_active",
+    "has_default_values": true,
+    "params": [
+      "startAuthor",
+      "startPermlink",
+      "from=0",
+      "limit=20",
+      `categories=${EMPTY_ARRAY}`,
+      `voteLimit=${DEFAULT_VOTES_LIMIT}`,
+      `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+      `filterIds=${EMPTY_ARRAY}`,
+      `filterAuthors=${EMPTY_ARRAY}`,
     ]
   },
   {
@@ -189,6 +213,9 @@ module.exports = [
       "parentPermlink",
       `voteLimit=${DEFAULT_VOTES_LIMIT}`,
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+      `filterIds=${EMPTY_ARRAY}`,
+      `filterAuthors=${EMPTY_ARRAY}`,
+      `filterNegativeRepAuthors=false`,
     ]
   },
   {
@@ -200,6 +227,23 @@ module.exports = [
       "parentPermlink",
       `voteLimit=${DEFAULT_VOTES_LIMIT}`,
       `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+      `filterIds=${EMPTY_ARRAY}`,
+      `filterAuthors=${EMPTY_ARRAY}`,
+      `filterNegativeRepAuthors=false`,
+      `sortByCreatedDesc=${EMPTY_OPTIONAL}`, // use strings: 'true', 'false'. Non-string false is null
+    ]
+  },
+  {
+    "api": "social_network",
+    "method": "get_last_reply",
+    "has_default_values": true,
+    "params": [
+      "author",
+      "permlink",
+      `voteLimit=${DEFAULT_VOTES_LIMIT}`,
+      `voteOffset=${DEFAULT_VOTES_OFFSET}`,
+      `filterIds=${EMPTY_ARRAY}`,
+      `filterAuthors=${EMPTY_ARRAY}`,
     ]
   },
   {
@@ -390,22 +434,46 @@ module.exports = [
   {
     "api": "follow",
     "method": "get_feed_entries",
-    "params": ["account", "entryId", "limit"]
+    "has_default_values": true,
+    "params": [
+      "account",
+      "entryId=0",
+      `limit=${DEFAULT_BLOG_FEED_LIMIT}`,
+      `filterTagMasks=${EMPTY_ARRAY}`,
+    ]
   },
   {
     "api": "follow",
     "method": "get_feed",
-    "params": ["account", "entryId", "limit"]
+    "has_default_values": true,
+    "params": [
+      "account",
+      "entryId=0",
+      `limit=${DEFAULT_BLOG_FEED_LIMIT}`,
+      `filterTagMasks=${EMPTY_ARRAY}`,
+    ]
   },
   {
     "api": "follow",
     "method": "get_blog_entries",
-    "params": ["account", "entryId", "limit"]
+    "has_default_values": true,
+    "params": [
+      "account",
+      "entryId=0",
+      `limit=${DEFAULT_BLOG_FEED_LIMIT}`,
+      `filterTagMasks=${EMPTY_ARRAY}`,
+    ]
   },
   {
     "api": "follow",
     "method": "get_blog",
-    "params": ["account", "entryId", "limit"]
+    "has_default_values": true,
+    "params": [
+      "account",
+      "entryId=0",
+      `limit=${DEFAULT_BLOG_FEED_LIMIT}`,
+      `filterTagMasks=${EMPTY_ARRAY}`,
+    ]
   },
   {
     "api": "follow",
@@ -563,7 +631,8 @@ module.exports = [
   },
   {
     "api": "account_notes",
-    "method": "get_value",
-    "params": ["account", "key"]
+    "method": "get_values",
+    "has_default_values": true,
+    "params": [`account`, `keys=${EMPTY_ARRAY}`]
   },
 ]

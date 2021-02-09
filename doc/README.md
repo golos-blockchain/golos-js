@@ -20,6 +20,7 @@
 - [Broadcast](#broadcast)
 - [Auth](#auth)
 - [Formatter](#formatter)
+- [Utils](#utils)
 
 # Install
 ```
@@ -1273,17 +1274,28 @@ var resultIsWif = golos.auth.isWif(privWif);
 console.log('isWif', resultIsWif);
 ```
 
-### Get Wif From Password Or Wif (Login Form Vaildation)
+### Login Form Validation
 ```
-golos.auth.getWif(name, privWifOrPassword, role = 'posting');
+golos.auth.login(name, privWifOrPassword, callback);
 ```
-This method is recommended to implement login forms in dApps on Golos Blockhain. Call it on entered login and password. If it is master password, it converts it to wif (with `toWif`) and returns it. If it is wif, it returns it without changes. Otherwise, if password format is wrong, it returns null. So if not null, you should compare it woth account's public key (can be got from `getAccounts`) using `wifIsValid`, and if true, authorize the user.
+Recommended for usage in login forms in dApps on Golos Blockchain.
+Obtains specified account (using `getAccounts` API), compares each of account keys with specified string, and returns object with WIFs (private keys) which this string provides and which should be used to authorize operations. Object has fields: `active`, `posting`, `owner`, and `memo`. Each field is `true` if string provides this role, or `false` otherwise. Also, it has field `password`. If provided string is a password (not key) and this password provides `posting` role, field `password` has password's value.
 #### Example:
 ```js
 var name = 'alice';
 var privWifOrPassword = '5J...'; // or 'P5J...'
-var privWifPosting = golos.auth.getWif(name, privWifOrPassword);
-console.log('getWif', privWifPosting);
+golos.auth.login(name, privWifOrPassword, function(err, response) {
+  console.log(response); // Object { owner: '5J...', active: null, posting: '5J...', memo: '5J...' }
+  if (response.active && !response.password) {
+    console.log('Login failed! It is not recommended to authorize users with active key (or key which can be used as active), except case if it is also the password!');
+    return;
+  }
+  if (!response.posting) {
+    console.log('Login failed! Incorrect password');
+    return;
+  }
+  console.log('Login OK! To authorize most of operations, use following WIF: ' + response.posting)
+});
 ```
 
 ### To Wif
@@ -1366,12 +1378,43 @@ console.log(golosPower);
 # Utils
 
 ### Validate Username
-```
-var isValidUsername = golos.utils.validateAccountName('test1234');
-console.log(isValidUsername);
-// => 'null'
+```js
+var nameRes = golos.utils.validateAccountName('test1234');
+console.log(nameRes.error); // => 'null'
+console.log(nameRes.msg); // => ''
 
-var isValidUsername = golos.utils.validateAccountName('a1');
-console.log(isValidUsername);
-// => 'Account name should be longer.'
+var nameRes = golos.utils.validateAccountName('a1');
+if (nameRes.error) {
+  console.log(nameRes.error); // => 'account_name_should_be_longer'
+  console.log(nameRes.msg); // => 'Account name should be longer.'
+}
+```
+All possible errors:
+```
+{ error: "account_name_should_not_be_empty", msg: "Account name should not be empty." }
+{ error: "account_name_should_be_longer", msg: "Account name should be longer." }
+{ error: "account_name_should_be_shorter", msg: "Account name should be shorter." }
+{ error: "each_account_segment_should_start_with_a_letter", msg: "Each account segment should start with a letter." }
+{ error: "each_account_segment_should_have_only_letters_digits_or_dashes", msg: "Each account segment should have only letters, digits, or dashes." }
+{ error: "each_account_segment_should_have_only_one_dash_in_a_row", msg: "Each account segment should have only one dash in a row." }
+{ error: "each_account_segment_should_end_with_a_letter_or_digit", msg: "Each account segment should end with a letter or digit." }
+{ error: "each_account_segment_should_be_longer", msg: "Each account segment should be longer" }
+```
+
+### Work With GOLOS Assets
+
+There is `golos.utils.Asset` class which allows parsing asset strings, received from blockchain (g.e. '99.999 GOLOS'), as well as constructing such strings from data entered by user. Also, it supports arithmetic and Math.* operations on asset's amount.
+
+```js
+let asset = golos.utils.Asset('99.999 GOLOS');  // or golos.utils.Asset(99999, 3, 'GOLOS')
+console.log(asset.amount); // => 99999
+console.log(asset.amountFloat); // => 99.999
+console.log(asset.precision); // => 3
+console.log(asset.symbol); // => 'GOLOS'
+console.log(asset.toString()); // => '99.999 GOLOS'
+console.log(asset.toString(0)); // => '99 GOLOS'
+
+// amount and amountFloat supports all arithmetic and Math.* operations
+asset.amount += 1; // it will be '100.000 GOLOS'
+asset.amountFloat -= 1; // it will be 99.000 GOLOS
 ```
