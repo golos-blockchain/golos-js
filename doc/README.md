@@ -19,6 +19,7 @@
 - [Broadcast API](#broadcast-api)
 - [Broadcast](#broadcast)
 - [Auth](#auth)
+- [Private Messages](#private-messages)
 - [Formatter](#formatter)
 - [Utils](#utils)
 
@@ -1337,6 +1338,60 @@ console.log('wifToPublic', resultWifToPublic);
 ### Sign Transaction
 ```
 golos.auth.signTransaction(trx, keys);
+```
+
+# Private Messages
+
+Golos Blockchain provides instant messages subsystem, which allows users communicate with encrypted private messages. Messages are encrypting on client-side (using sender's private memo key and recipient's public memo key), sending to blockchain via `private_message_operation`, and next can be obtained from DB with `private_message` API, and decrypted on client-side (using private memo key of from/to and public memo key of another user).
+
+### Encrypt and send
+
+Messages are stringified JSON objects. If you want they showing in Golos Blogs or Golos forums, you should use stringified JSON-objects with `body` field which containing string with text of message, and also, with `app` and `version` fields which are describing your client app. Also, you can add any custom fields. But if you using only `body`, we recommend you set `app` as `golos-id` and `version` as 1.
+
+Stringified JSON-object message should be enciphered (uses SHA-512 with nonce, which is a UNIX timestamp in microseconds, and AES), and converted to HEX string. You can do it easy with `golos.messages.encode` function.
+
+Example: 
+
+```
+let message = {
+    app: 'golos-id',
+    version: 1,
+    body: 'Hello world',
+}
+let data = golos.messages.encode('alice private memo key', 'bob public memo key', JSON.stringify(message'));
+
+const json = JSON.stringify(['private_message', {
+    from: 'alice',
+    to: 'bob',
+    nonce: data.nonce.toString(),
+    from_memo_key: 'alice PUBLIC memo key',
+    to_memo_key: 'bob public memo key',
+    checksum: data.checksum,
+    update: false,
+    encrypted_message: data.message,
+}]);
+golos.broadcast.customJson('alice private posting key', [], ['alice'], 'private_message', json, (err, result) => {
+    alert(err);
+    alert(JSON.stringify(result));
+});
+```
+
+### Obtain and decrypt
+
+Message can be obtained with `golos.api.getThread`, each message is object with `from_memo_key`, `to_memo_key`, `nonce`, `checksum`, `encrypted_message` and another fields.
+
+```
+golos.api.getThread('alice', 'bob', {}, (err, results) => {
+    let message = results[0];
+    let someone_public_key;
+    if (alice_public_memo_key === message.to_memo_key) {
+        someone_public_key = message.from_memo_key;
+    } else {
+        someone_public_key = message.to_memo_key;
+    }
+    let str = golos.messages.decode('alice private key', someone_public_key, message);
+    alert(str);
+});
 ```
 
 # Formatter
